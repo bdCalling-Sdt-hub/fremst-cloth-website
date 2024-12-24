@@ -1,0 +1,25 @@
+@tailwind base;
+@tailwind components;
+@tailwind utilities;  
+
+
+
+.ant-form-item {
+    margin-bottom: 15px !important;
+  }
+
+  .footerInput.ant-input-affix-wrapper { 
+ padding: 4px  0px 4px 10px !important;
+  } 
+
+  .footerInput.ant-input-outlined { 
+    background: #FFFFFF !important; 
+    border-color:transparent !important; 
+   } 
+
+   .footerInput.ant-input-affix-wrapper >input.ant-input {
+    color: white; 
+   }   
+
+
+
