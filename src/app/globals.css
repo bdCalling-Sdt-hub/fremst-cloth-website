@@ -1,25 +1,38 @@
 @tailwind base;
 @tailwind components;
-@tailwind utilities;  
-
-
+@tailwind utilities;
 
 .ant-form-item {
-    margin-bottom: 15px !important;
-  }
+  margin-bottom: 15px !important;
+}
 
-  .footerInput.ant-input-affix-wrapper { 
- padding: 4px  0px 4px 10px !important;
-  } 
+.footerInput.ant-input-affix-wrapper {
+  padding: 4px 0px 4px 10px !important;
+}
 
-  .footerInput.ant-input-outlined { 
-    background: #FFFFFF !important; 
-    border-color:transparent !important; 
-   } 
+.footerInput.ant-input-outlined {
+  background: #ffffff !important;
+  border-color: transparent !important;
+}
 
-   .footerInput.ant-input-affix-wrapper >input.ant-input {
-    color: white; 
-   }   
+.footerInput.ant-input-affix-wrapper > input.ant-input {
+  color: white;
+}
 
+/* pagination style */
+.ant-pagination-item-active a {
+  color: white !important;
+  background-color: #292c61 !important;
+}
 
+.ant-switch-checked {
+  background-color: #292c61 !important;
+}
 
+.ant-btn:hover,
+.ant-btn:focus {
+  background-color: #c4c7ff !important;
+  border-color: black !important;
+  color: black !important;
+  box-shadow: none !important;
+}
