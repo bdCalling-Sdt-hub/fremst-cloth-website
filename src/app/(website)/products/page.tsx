@@ -211,8 +211,8 @@ const ShopPage = () => {
         Showing <span className="font-bold">1-{pageSize} items</span> out of{" "}
         <span className="font-bold">{products?.length} results</span>
       </h1>
-      <div className="flex justify-center gap-10">
-        <div className="w-[30%]">
+      <div className="md:flex justify-center gap-10">
+        <div className="md:w-[30%]">
           <h1
             className={`text-xl font-bold uppercase ${bigShoulders.className}`}
           >
@@ -225,7 +225,7 @@ const ShopPage = () => {
               <Heading className="text-black">Product Category</Heading>
             </h1>
             <div>
-              {category.map((item) => (
+              {category?.map((item) => (
                 <div
                   key={item.name}
                   className="my-2 flex items-center justify-between"
@@ -247,14 +247,14 @@ const ShopPage = () => {
             </div>
           </div>
         </div>
-        <div className="w-[70%] mb-20">
+        <div className="md:w-[70%] mb-20">
           <div className="flex justify-end mb-5">
             <Select
               placeholder="Select a category"
               style={{ width: 200 }}
               allowClear
             >
-              {category.map((item) => (
+              {category?.map((item) => (
                 <Select.Option key={item.name} value={item.name}>
                   {item.name}
                 </Select.Option>
@@ -262,7 +262,7 @@ const ShopPage = () => {
             </Select>
           </div>
           <div className="grid md:grid-cols-3 gap-10 grid-cols-1">
-            {paginatedProducts.map((product) => (
+            {paginatedProducts?.map((product) => (
               <ProductCard product={product} key={product.id} />
             ))}
           </div>

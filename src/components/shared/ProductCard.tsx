@@ -2,6 +2,7 @@
 import React from "react";
 import { Plus_Jakarta_Sans } from "next/font/google";
 import { Big_Shoulders_Display } from "next/font/google";
+import Link from "next/link";
 const plusJakarta = Plus_Jakarta_Sans({
   subsets: ["latin"],
   weight: ["400", "500", "600", "700"],
@@ -24,7 +25,7 @@ const ProductCard = ({
   };
 }) => {
   return (
-    <div className="relative border-2 rounded-2xl w-[290px] group bg-white bg-opacity-30  hover:border-primary ">
+    <div className="relative border-2 rounded-2xl md:w-[290px] group bg-white bg-opacity-30  hover:border-primary ">
       <div className="relative">
         {product.soldOut && (
           <div className="absolute top-0 left-0 z-10">
@@ -61,12 +62,14 @@ const ProductCard = ({
         >
           ${product.price.toFixed(2)}
         </p>
-        <button
-          className=" border-2 border-primary text-primary w-full h-[47px]  rounded-xl font-semibold  text-[20px] tracking-wide
+        <Link href={`/products/${product?.id}`}>
+          <button
+            className=" border-2 border-primary text-primary w-full h-[47px]  rounded-xl font-semibold  text-[20px] tracking-wide
            group-hover:bg-primary group-hover:text-white transition-colors "
-        >
-          Add to Cart
-        </button>
+          >
+            View Details
+          </button>
+        </Link>
       </div>
     </div>
   );

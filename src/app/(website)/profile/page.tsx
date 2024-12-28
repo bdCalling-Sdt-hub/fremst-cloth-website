@@ -10,6 +10,7 @@ import {
   Tabs,
   Upload,
   UploadFile,
+  Select,
 } from "antd";
 import Image from "next/image";
 import moment from "moment";
@@ -184,6 +185,8 @@ const ProfilePage = () => {
       url: profile.profileImage,
     },
   ]);
+  const [searchText, setSearchText] = useState("");
+  const [statusFilter, setStatusFilter] = useState("");
 
   // console.log(fileList);
 
@@ -213,6 +216,21 @@ const ProfilePage = () => {
   }) => {
     setFileList(newFileList);
   };
+
+  const handleSearch = (e: React.ChangeEvent<HTMLInputElement>) => {
+    setSearchText(e.target.value);
+  };
+
+  const handleStatusChange = (value: string) => {
+    setStatusFilter(value);
+  };
+
+  const filteredOrderHistory = profile.orderHistory.filter((order) => {
+    return (
+      order.productName.toLowerCase().includes(searchText.toLowerCase()) &&
+      (statusFilter ? order.status === statusFilter : true)
+    );
+  });
 
   const columns = [
     {
@@ -530,16 +548,32 @@ const ProfilePage = () => {
           </div>
         </div>
 
-        {/* antd table here  */}
-        <div className="my-10">
-          <Heading className="my-10">My Order History</Heading>
-          <Table
-            columns={columns}
-            dataSource={profile?.orderHistory}
-            rowKey={(record) => record._id}
-            pagination={{ pageSize: 10 }}
+        <Heading className="mt-10">My Order History</Heading>
+        <div className="flex justify-between items-center my-5">
+          <Input
+            placeholder="Search by product name"
+            value={searchText}
+            onChange={handleSearch}
+            style={{ width: "30%" }}
           />
+          <Select
+            placeholder="Filter by status"
+            onChange={handleStatusChange}
+            style={{ width: "20%" }}
+            allowClear
+          >
+            <Select.Option value="Completed">Completed</Select.Option>
+            <Select.Option value="In Progress">In Progress</Select.Option>
+            <Select.Option value="Pending">Pending</Select.Option>
+          </Select>
         </div>
+
+        <Table
+          columns={columns}
+          dataSource={filteredOrderHistory}
+          rowKey={(record) => record._id}
+          pagination={{ pageSize: 10 }}
+        />
       </div>
     </div>
   );
