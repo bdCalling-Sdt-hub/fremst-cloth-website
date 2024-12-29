@@ -191,15 +191,17 @@ const Navbar = () => {
                 </div>
               </Tooltip>
 
-              <Link href={"/profile"} className=" flex items-center gap-2">
-                <Image
-                  src="/person.png"
-                  alt=""
-                  height={44}
-                  width={44}
-                  className="  rounded-full border-[2px] border-primary text-[16px]"
-                />
-                <p>Asad</p>
+              <Link href={"/profile"}>
+                <div className=" flex items-center justify-center gap-2">
+                  <Image
+                    src="/person.png"
+                    alt=""
+                    height={44}
+                    width={44}
+                    className="rounded-full border-[2px] border-primary text-[16px]"
+                  />
+                  <p className="text-xl">Asad</p>
+                </div>
               </Link>
             </div>
           </div>

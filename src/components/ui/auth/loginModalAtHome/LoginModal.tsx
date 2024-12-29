@@ -94,7 +94,7 @@ const LoginModal: React.FC = () => {
               <Form.Item>
                 <button
                   type="submit"
-                  className="bg-blue-600 hover:bg-blue-700 text-white px-6 py-2 rounded w-full"
+                  className="bg-primary hover:bg-blue-700 text-xl font-semibold text-white px-6 py-2 rounded w-full"
                 >
                   Log In
                 </button>
