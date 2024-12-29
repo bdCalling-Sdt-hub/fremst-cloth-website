@@ -1,4 +1,3 @@
-/* eslint-disable @next/next/no-img-element */
 "use client";
 import Heading from "@/components/shared/Heading";
 import React, { useState } from "react";
@@ -7,6 +6,8 @@ import Slider, { Settings } from "react-slick";
 import { FaArrowLeftLong, FaArrowRightLong } from "react-icons/fa6";
 import { Plus_Jakarta_Sans } from "next/font/google";
 import ProductCard from "@/components/shared/ProductCard";
+import "slick-carousel/slick/slick.css";
+import "slick-carousel/slick/slick-theme.css";
 
 const plusJakarta = Plus_Jakarta_Sans({
   subsets: ["latin"],
@@ -69,7 +70,7 @@ const products = [
   },
 ];
 
-const TopProduct = () => {
+const YouMayLikeSection = () => {
   const [activeIndex, setActiveIndex] = useState(0);
   const CustomNextArrow = ({ onClick }: { onClick?: () => void }) => (
     <div
@@ -144,7 +145,7 @@ const TopProduct = () => {
       {
         breakpoint: 600,
         settings: {
-          slidesToShow: 2,
+          slidesToShow: 3,
           slidesToScroll: 1,
           initialSlide: 2,
         },
@@ -158,41 +159,42 @@ const TopProduct = () => {
       },
     ],
   };
-  return (
-    <div className="bg-[#F3F6FD]">
-      <div className={`${bigShoulders.className} py-[120px]  container  `}>
-        {/* heading  */}
-        <div className=" pb-[50px]">
-          <Heading className=" underline underline-offset-[12px] underline-primary   ">
-            {" "}
-            Top Product{" "}
-          </Heading>
-          <p className="border-b border-gray-300  "></p>
-          <div className="flex items-center justify-end -mt-5">
-            <button
-              className={`bg-white border border-gray-300 text-[#000000] py-2 px-6 rounded-full font-semibold  text-[12px] tracking-wide ${plusJakarta.className} `}
-            >
-              {" "}
-              View More{" "}
-            </button>
-          </div>
-        </div>
 
-        {/* body   */}
-        <div className="w-full ">
-          <div className=" lg:w-[1300px] md:w-[600px]  w-[400px]  ">
-            <Slider {...settings}>
-              {products.map((product) => (
-                <div key={product.id} className=" ms-5">
-                  <ProductCard product={product} />
-                </div>
-              ))}
-            </Slider>
-          </div>
+  return (
+    <div
+      className={`${bigShoulders.className} pt-[80px] pb-[100px] container `}
+    >
+      {/* heading  */}
+      <div className=" pb-[50px]">
+        <Heading className=" underline underline-offset-[12px] underline-primary   ">
+          {" "}
+          You may also like{" "}
+        </Heading>
+        <p className="border-b border-gray-300  "></p>
+        <div className="flex items-center justify-end -mt-5">
+          <button
+            className={`bg-white border border-gray-300 text-[#000000] py-2 px-6 rounded-full font-semibold  text-[12px] tracking-wide ${plusJakarta.className} `}
+          >
+            {" "}
+            View More{" "}
+          </button>
+        </div>
+      </div>
+
+      {/* body   */}
+      <div className="w-full ">
+        <div className=" lg:w-[1300px] md:w-[600px]  w-[400px]  ">
+          <Slider {...settings}>
+            {products.map((product) => (
+              <div key={product.id} className=" ms-5">
+                <ProductCard product={product} />
+              </div>
+            ))}
+          </Slider>
         </div>
       </div>
     </div>
   );
 };
 
-export default TopProduct;
+export default YouMayLikeSection;

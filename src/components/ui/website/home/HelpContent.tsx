@@ -38,7 +38,7 @@ const data = [
 const HelpContent = () => {
   return (
     <div className=" container py-[100px]">
-      <div className=" md:flex space-y-5 items-center justify-between gap-10">
+      <div className=" md:flex space-y-5 md:space-y-0 items-center justify-between gap-10">
         {data?.map((value) => (
           <div
             key={value?.id}

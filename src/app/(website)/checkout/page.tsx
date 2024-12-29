@@ -143,7 +143,7 @@ const CheckoutPage: React.FC = () => {
                 {cart?.map((item) => (
                   <li
                     key={item.key}
-                    className="flex items-center justify-between py-2"
+                    className="flex items-center border-t justify-between py-2"
                   >
                     <Image
                       src={item.product.image}

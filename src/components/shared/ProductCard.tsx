@@ -64,7 +64,7 @@ const ProductCard = ({
         </p>
         <Link href={`/products/${product?.id}`}>
           <button
-            className=" border-2 border-primary text-primary w-full h-[47px]  rounded-xl font-semibold  text-[20px] tracking-wide
+            className=" border-2 mt-2 border-primary text-primary w-full h-[47px]  rounded-xl font-semibold  text-[20px] tracking-wide
            group-hover:bg-primary group-hover:text-white transition-colors "
           >
             View Details

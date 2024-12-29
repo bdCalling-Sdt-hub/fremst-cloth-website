@@ -5,7 +5,7 @@ import Image from "next/image";
 import Link from "next/link";
 import { AiOutlineMenu } from "react-icons/ai";
 import { useState } from "react";
-import { ConfigProvider, Select, Tooltip } from "antd";
+import { Badge, ConfigProvider, Select, Tooltip } from "antd";
 import { TbChevronDown } from "react-icons/tb";
 import NavItems from "./NavItems";
 import MobileDrawer from "./MobileDrawer";
@@ -70,12 +70,15 @@ const Navbar = () => {
   return (
     <div className={`${plusJakarta.className}`}>
       {/* 1st navbar   */}
-      <div className=" bg-primary  h-[50px] flex items-center justify-center font-[400] lg:text-[14px] text-[14px] text-white tracking-wide ">
-        Get high-quality workwear, protective gear, and tools at unbeatable
-        wholesale prices!{" "}
-        <span className=" font-semibold underline underline-offset-2 px-1">
-          Show more
-        </span>
+      <div className=" bg-primary p-1 h-[50px] md:flex items-center justify-center font-[400] lg:text-[14px] text-[14px] text-white tracking-wide ">
+        <p className="hidden md:block">
+          {" "}
+          Get high-quality workwear, protective gear, and tools at unbeatable
+          wholesale prices!{" "}
+          <span className=" font-semibold underline underline-offset-2 px-1">
+            Show more
+          </span>
+        </p>
         <div className="ms-5">
           <ConfigProvider
             theme={{
@@ -168,9 +171,11 @@ const Navbar = () => {
             </div>
 
             <div className="flex items-center space-x-4">
-              <Link href={"/cart"} className="hidden md:flex">
-                <HiOutlineShoppingBag size={34} color="#292C61" />
-              </Link>
+              <Badge count="4">
+                <Link href={"/cart"} className="hidden md:flex">
+                  <HiOutlineShoppingBag size={34} color="#292C61" />
+                </Link>
+              </Badge>
 
               <Tooltip
                 title={tooltipContent}
@@ -180,7 +185,7 @@ const Navbar = () => {
                   width: "290px",
                 }}
               >
-                <div className="border-2 border-primary w-10 h-10 rounded-full text-gray-600 flex items-center justify-center text-[12px] font-semibold">
+                <div className="border-2 p-1 border-primary w-10 h-10 rounded-full text-gray-600 flex items-center justify-center text-[12px] font-semibold">
                   {" "}
                   954${" "}
                 </div>
