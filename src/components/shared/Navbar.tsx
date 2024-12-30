@@ -11,6 +11,7 @@ import NavItems from "./NavItems";
 import MobileDrawer from "./MobileDrawer";
 import { HiOutlineShoppingBag } from "react-icons/hi";
 import { Plus_Jakarta_Sans } from "next/font/google";
+import profileImg from "../../assets/randomProfile4.jpg";
 const plusJakarta = Plus_Jakarta_Sans({
   subsets: ["latin"],
   weight: ["400", "500", "600", "700"],
@@ -171,15 +172,18 @@ const Navbar = () => {
             </div>
 
             <div className="flex items-center space-x-4">
-              <Badge count="4">
-                <Link href={"/cart"} className="hidden md:flex">
-                  <HiOutlineShoppingBag size={34} color="#292C61" />
-                </Link>
-              </Badge>
+              <div className="hidden md:block">
+                <Badge count="4">
+                  <Link href={"/cart"} className="hidden md:flex">
+                    <HiOutlineShoppingBag size={34} color="#292C61" />
+                  </Link>
+                </Badge>
+              </div>
 
               <Tooltip
                 title={tooltipContent}
                 color="white"
+                placement="topRight"
                 overlayInnerStyle={{
                   color: "rgba(0, 0, 0, 0.88)",
                   width: "290px",
@@ -192,14 +196,16 @@ const Navbar = () => {
               </Tooltip>
 
               <Link href={"/profile"}>
-                <div className="flex items-center justify-center gap-2">
-                  <Image
-                    src="/person.png"
-                    alt=""
-                    height={44}
-                    width={44}
-                    className="rounded-full border-[2px] border-primary text-[16px]"
-                  />
+                <div className="flex items-center justify-center border-4 pe-4 p-1 rounded-full gap-2">
+                  <div>
+                    <Image
+                      src={profileImg}
+                      alt=""
+                      height={44}
+                      width={44}
+                      className="w-12 h-12 rounded-full object-cover"
+                    />
+                  </div>
                   <p className="text-xl">Asad</p>
                 </div>
               </Link>
@@ -210,13 +216,6 @@ const Navbar = () => {
         {/* Mobile Drawer */}
         <MobileDrawer open={showDrawer} setOpen={setShowDrawer} items={items} />
       </header>
-      <style jsx>{`
-        @media (max-width: 768px) {
-          .tooltip-content {
-            width: 200px !important;
-          }
-        }
-      `}</style>
     </div>
   );
 };

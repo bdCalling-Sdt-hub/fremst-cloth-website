@@ -148,12 +148,12 @@ const Categories = () => {
           {" "}
           Browse Categories{" "}
         </Heading>
-        <p className="border-b border-gray-300  mt-1"></p>
+        <p className="border-b border-gray-300"></p>
       </div>
 
       {/* Slider */}
       <div className="w-full ">
-        <div className=" lg:w-[1300px] md:w-[600px]  w-[400px] mt-[35px] ">
+        <div className="lg:w-[1300px] md:w-[600px] mt-[35px]">
           <Slider {...settings}>
             {categories.map((item, index) => (
               <div key={index} className="flex flex-col items-center gap-2 ">

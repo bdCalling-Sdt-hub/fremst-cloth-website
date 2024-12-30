@@ -183,7 +183,7 @@ const YouMayLikeSection = () => {
 
       {/* body   */}
       <div className="w-full ">
-        <div className=" lg:w-[1300px] md:w-[600px]  w-[400px]  ">
+        <div className=" lg:w-[1300px] md:w-[600px]">
           <Slider {...settings}>
             {products.map((product) => (
               <div key={product.id} className=" ms-5">

@@ -37,12 +37,12 @@ const MobileDrawer = ({
       <div className="flex flex-col  w-1/2 gap-8">
         <NavItems items={items} onClose={onClose} />
 
-        <div className="flex items-center gap-4">
+        <div className="flex items-center gap-6">
           <Link href={"/favorite"} className="">
-            <Heart size={26} color="#ED6923" />
+            <Heart size={26} color="#292c61" />
           </Link>
-          <Link href={`/food/1`} className="">
-            <ShoppingCart size={26} color="#ED6923" />
+          <Link href={`/cart`} className="">
+            <ShoppingCart size={26} color="#292c61" />
           </Link>
         </div>
         <ConfigProvider
@@ -50,9 +50,9 @@ const MobileDrawer = ({
             components: {
               Select: {
                 optionSelectedColor: "#ffffff",
-                optionSelectedBg: "#ED6923",
+                optionSelectedBg: "#292c61",
                 optionActiveBg: "#fdf0e9",
-                activeBorderColor: "#ED6923",
+                activeBorderColor: "#292c61",
                 hoverBorderColor: "transparent",
               },
             },
@@ -63,10 +63,10 @@ const MobileDrawer = ({
             defaultValue="en"
             options={languageOptions}
             // variant={'borderless'}
-            prefix={<TbWorld size={26} color="#ED6923" />}
+            prefix={<TbWorld size={26} color="#292c61" />}
             suffixIcon={
               <div className="ms-2">
-                <TbChevronDown size={20} color="#ED6923" />
+                <TbChevronDown size={20} color="#292c61" />
               </div>
             }
             labelInValue

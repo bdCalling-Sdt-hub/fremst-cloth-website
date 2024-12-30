@@ -303,8 +303,8 @@ const ProfilePage = () => {
   };
 
   return (
-    <div className="max-w-[1500px] mx-auto my-10 flex gap-5 w-full">
-      <div className="w-[35%]">
+    <div className="max-w-[1500px] p-7 mx-auto my-10 md:flex gap-5 w-full">
+      <div className="md:w-[35%]">
         <div className="border rounded-2xl shadow-md relative">
           <Image
             className="w-full rounded-t-2xl h-[180px]"
@@ -516,7 +516,7 @@ const ProfilePage = () => {
         </div>
       </div>
 
-      <div className="w-[65%]">
+      <div className="md:w-[65%] mt-10 md:mt-0">
         <div className="grid grid-col-1 md:grid-cols-4 gap-5">
           <div className="flex flex-col hover:shadow-xl px-10 rounded-2xl shadow-md py-6 gap-3 items-center">
             <div className="p-6 rounded-2xl bg-[#f3f3ff]">
@@ -568,12 +568,14 @@ const ProfilePage = () => {
           </Select>
         </div>
 
-        <Table
-          columns={columns}
-          dataSource={filteredOrderHistory}
-          rowKey={(record) => record._id}
-          pagination={{ pageSize: 10 }}
-        />
+        <div className="overflow-x-auto">
+          <Table
+            columns={columns}
+            dataSource={filteredOrderHistory}
+            rowKey={(record) => record._id}
+            pagination={{ pageSize: 10 }}
+          />
+        </div>
       </div>
     </div>
   );

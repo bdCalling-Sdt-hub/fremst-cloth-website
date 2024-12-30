@@ -152,7 +152,7 @@ const MyCompanyCloths = () => {
       {
         breakpoint: 480,
         settings: {
-          slidesToShow: 1,
+          slidesToShow: 2,
           slidesToScroll: 1,
         },
       },
@@ -169,8 +169,8 @@ const MyCompanyCloths = () => {
           {" "}
           MY COMPANY CLOTHS{" "}
         </Heading>
-        <p className="border-b border-gray-300 mt-1"></p>
-        <div className="flex items-center justify-end -mt-8">
+        <p className="border-b border-gray-300"></p>
+        <div className="flex items-center justify-end -mt-5">
           <button
             className={`bg-white border border-gray-300 text-[#000000] py-2 px-6 rounded-full font-semibold  text-[12px] tracking-wide ${plusJakarta.className} `}
           >
@@ -182,10 +182,10 @@ const MyCompanyCloths = () => {
 
       {/* body   */}
       <div className="w-full ">
-        <div className=" lg:w-[1300px] md:w-[600px]  w-[400px]  ">
+        <div className=" lg:w-[1300px] md:w-[600px]  ">
           <Slider {...settings}>
             {products.map((product) => (
-              <div key={product.id} className=" ms-5">
+              <div key={product.id} className="ms-5">
                 <ProductCard product={product} />
               </div>
             ))}
