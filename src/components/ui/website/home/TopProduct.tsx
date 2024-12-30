@@ -167,8 +167,8 @@ const TopProduct = () => {
             {" "}
             Top Product{" "}
           </Heading>
-          <p className="border-b border-gray-300  "></p>
-          <div className="flex items-center justify-end -mt-5">
+          <p className="border-b border-gray-300  mt-1"></p>
+          <div className="flex items-center justify-end -mt-8">
             <button
               className={`bg-white border border-gray-300 text-[#000000] py-2 px-6 rounded-full font-semibold  text-[12px] tracking-wide ${plusJakarta.className} `}
             >

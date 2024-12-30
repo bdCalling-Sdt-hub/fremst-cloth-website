@@ -148,7 +148,7 @@ const Categories = () => {
           {" "}
           Browse Categories{" "}
         </Heading>
-        <p className="border-b border-gray-300  "></p>
+        <p className="border-b border-gray-300  mt-1"></p>
       </div>
 
       {/* Slider */}

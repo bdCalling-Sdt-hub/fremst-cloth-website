@@ -1,6 +1,6 @@
+"use client";
 /* eslint-disable @typescript-eslint/no-explicit-any */
 /* eslint-disable @next/next/no-img-element */
-"use client";
 import Image from "next/image";
 import Link from "next/link";
 import { AiOutlineMenu } from "react-icons/ai";
@@ -23,8 +23,8 @@ const Navbar = () => {
   const remainingCredit = 954;
 
   const tooltipContent = (
-    <div className="flex items-center  justify-between">
-      <div className=" w-[40px] h-10  bg-primary text-white rounded-full flex items-center justify-center font-semibold text-[12px] ">
+    <div className="flex items-center justify-between">
+      <div className="w-[40px] h-10 bg-primary text-white rounded-full flex items-center justify-center font-semibold text-[12px]">
         954$
       </div>
       <div className="p-2 w-[235px]">
@@ -67,15 +67,15 @@ const Navbar = () => {
     { key: "about-us", label: "About Us", path: "/about-us" },
     { key: "contact-us", label: "Contact Us", path: "/contact" },
   ];
+
   return (
     <div className={`${plusJakarta.className}`}>
-      {/* 1st navbar   */}
-      <div className=" bg-primary p-1 h-[50px] md:flex items-center justify-center font-[400] lg:text-[14px] text-[14px] text-white tracking-wide ">
+      {/* 1st navbar */}
+      <div className="bg-primary p-1 h-[50px] md:flex items-center justify-center font-[400] lg:text-[14px] text-[14px] text-white tracking-wide">
         <p className="hidden md:block">
-          {" "}
           Get high-quality workwear, protective gear, and tools at unbeatable
           wholesale prices!{" "}
-          <span className=" font-semibold underline underline-offset-2 px-1">
+          <span className="font-semibold underline underline-offset-2 px-1">
             Show more
           </span>
         </p>
@@ -148,10 +148,10 @@ const Navbar = () => {
           </ConfigProvider>
         </div>
       </div>
-      {/* 2nd navbar   */}
+      {/* 2nd navbar */}
       <header className={`bg-[#FFFFFF] shadow w-full`}>
-        <nav className="container  h-[100px]  relative z-10 w-full">
-          <div className="flex justify-between items-center h-full w-full ">
+        <nav className="container h-[100px] relative z-10 w-full">
+          <div className="flex justify-between items-center h-full w-full">
             <div className="flex items-center lg:gap-0 gap-1">
               <div className="md:hidden">
                 <AiOutlineMenu
@@ -166,7 +166,7 @@ const Navbar = () => {
               </Link>
             </div>
             {/* Nav Items for Desktop */}
-            <div className="hidden md:flex  p-2 items-center gap-5">
+            <div className="hidden md:flex p-2 items-center gap-5">
               <NavItems items={items} />
             </div>
 
@@ -184,15 +184,15 @@ const Navbar = () => {
                   color: "rgba(0, 0, 0, 0.88)",
                   width: "290px",
                 }}
+                overlayClassName="tooltip-content"
               >
                 <div className="border-2 p-1 border-primary w-10 h-10 rounded-full text-gray-600 flex items-center justify-center text-[12px] font-semibold">
-                  {" "}
-                  954${" "}
+                  954$
                 </div>
               </Tooltip>
 
               <Link href={"/profile"}>
-                <div className=" flex items-center justify-center gap-2">
+                <div className="flex items-center justify-center gap-2">
                   <Image
                     src="/person.png"
                     alt=""
@@ -210,6 +210,13 @@ const Navbar = () => {
         {/* Mobile Drawer */}
         <MobileDrawer open={showDrawer} setOpen={setShowDrawer} items={items} />
       </header>
+      <style jsx>{`
+        @media (max-width: 768px) {
+          .tooltip-content {
+            width: 200px !important;
+          }
+        }
+      `}</style>
     </div>
   );
 };
