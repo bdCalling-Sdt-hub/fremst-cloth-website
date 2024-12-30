@@ -59,7 +59,7 @@ const About = () => {
               />
             </div>
             <div>
-              <h2 className="text-[#1a237e] text-2xl font-bold mb-4">
+              <h2 className="text-[#1a237e] uppercase text-2xl font-bold mb-4">
                 Mission
               </h2>
               <p className="text-gray-600 leading-relaxed">
@@ -75,7 +75,7 @@ const About = () => {
         </section>
 
         {/* Vision Section */}
-        <section className="grid md:grid-cols-2 gap-8 items-center container mx-auto">
+        <section className="grid md:grid-cols-2 gap-8 my-20 items-center container mx-auto">
           <div>
             <h2 className="text-[#1a237e] text-2xl font-bold mb-4">VISSION</h2>
             <p className="text-gray-600 leading-relaxed">

@@ -108,10 +108,6 @@ const ProductDetailsPage: React.FC = () => {
     },
   ];
 
-  const handleAddToCart = () => {
-    toast.success("Item added to cart successfully!");
-  };
-
   return (
     <>
       <div className="md:p-28 md:pb-0 p-8 max-w-7xl mx-auto font-fontTwo">
@@ -183,7 +179,7 @@ const ProductDetailsPage: React.FC = () => {
               <h1 className="font-bold text-2xl">Color:</h1>
               <div className="w-20 border rounded-xl h-10 bg-[#e9fc52]"></div>
             </div>
-            <div className="flex items-center gap-4 my-3">
+            <div className="flex items-center gap-4 ">
               <div className="flex border font-semibold p-2 rounded-2xl border-gray-300 items-center gap-3">
                 <button
                   onClick={() =>
@@ -207,7 +203,9 @@ const ProductDetailsPage: React.FC = () => {
             </div>
             <div className="flex md:text-xl font-bold gap-4 mb-5 md:mb-0">
               <button
-                onClick={() => handleAddToCart}
+                onClick={() =>
+                  toast.success("Product added to cart successfully!")
+                }
                 className="bg-primary text-white px-5 py-3 rounded-lg"
               >
                 Add to Cart

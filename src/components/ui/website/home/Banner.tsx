@@ -25,25 +25,23 @@ const Banner = () => {
         width: "100%",
       }}
     >
-      <div className=" flex flex-col gap-2 container">
+      <div className=" flex flex-col gap-1 container">
         <p
-          className={`${bigShoulders.className}  w-full text-white font-[800] text-[32px] md:text-[72px]`}
+          className={`${bigShoulders.className}  w-full uppercase text-white font-[800] text-[32px] md:text-7xl mb-5`}
         >
-          {" "}
           Gloves That Work <br /> as Hard as You Do
         </p>
 
         <p
           className={`${plusJakarta.className}  text-white font-[500] text-[18px] tracking-wider`}
         >
-          {" "}
           Select from a variety of models for every purpose.{" "}
         </p>
 
         <Link href={"/products"}>
-          <button className=" bg-[#FFC700] w-[220px] font-medium rounded-full  py-2 text-gray-700 text-[16px] mt-3">
+          <button className=" bg-[#FFC700] w-[220px] font-semibold rounded-full py-2 text-gray-700 text-[16px] mt-3">
             {" "}
-            Explore Our Gloves
+            Explore our gloves
           </button>
         </Link>
       </div>

@@ -120,7 +120,7 @@ const Contact = () => {
             </p>
 
             <Form className="space-y-4" layout="vertical">
-              <TextInput name="name" label="Full Name" />
+              <TextInput name="name" label="Full name" />
               <TextInput name="email" label="Email" />
 
               <Form.Item
@@ -152,7 +152,7 @@ const Contact = () => {
               <div className="flex w-full justify-end mt-4">
                 <button
                   type="submit"
-                  className="px-6 py-3 w-full bg-[#3843ff] text-white font-bold rounded-lg text-lg transition-colors duration-200"
+                  className="px-6 py-3 w-full bg-[#F5F5F5] font-bold rounded-lg text-lg transition-colors duration-200"
                 >
                   Submit your message
                 </button>

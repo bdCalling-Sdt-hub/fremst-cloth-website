@@ -1,9 +1,8 @@
 "use client";
 
-import { Form, Input, Button, Radio, Modal } from "antd";
+import { Form, Input, Button, Modal, Radio } from "antd";
 import { useState } from "react";
 import Image from "next/image";
-import Head from "next/head";
 
 import productImg1 from "../../../assets/product1.1.png";
 import productImg2 from "../../../assets/product1.2.png";
@@ -64,6 +63,7 @@ const CheckoutPage: React.FC = () => {
   );
 
   const [isModalVisible, setIsModalVisible] = useState(false);
+  const [deliveryOption, setDeliveryOption] = useState("default");
 
   const onFinish = (values: Record<string, unknown>) => {
     console.log("Form Values:", values);
@@ -76,9 +76,6 @@ const CheckoutPage: React.FC = () => {
 
   return (
     <div className="bg-white">
-      <Head>
-        <title>Checkout - Doublet24</title>
-      </Head>
       <Heading className="text-center">Checkout</Heading>
       <div className="p-10 max-w-7xl mx-auto">
         <Form
@@ -89,103 +86,85 @@ const CheckoutPage: React.FC = () => {
           <div className="md:w-[70%] md:p-10 md:border rounded-2xl md:shadow-lg">
             <Heading className="">Billing Information</Heading>
             <Form.Item
-              label="Business Name"
+              label="Full Name"
               name="fullName"
               rules={[{ required: true }]}
             >
-              <Input className="py-2" placeholder="Business Name" />
+              <Input className="py-2" placeholder="Full Name" />
             </Form.Item>
-            <div className="flex w-full gap-5">
-              <Form.Item
-                label="Country"
-                name="country"
-                rules={[{ required: true }]}
-                className="w-1/2"
+
+            <h1 className="text-3xl font-semibold my-5">
+              Choose delivery address
+            </h1>
+            <Form.Item name="deliveryOption">
+              <Radio.Group
+                onChange={(e) => setDeliveryOption(e.target.value)}
+                value={deliveryOption}
+                className="flex flex-col"
               >
-                <Input className="py-2" placeholder="Country" />
-              </Form.Item>
-              <Form.Item
-                label="State/Province"
-                name="state"
-                rules={[{ required: true }]}
-                className="w-1/2"
-              >
-                <Input className="py-2" placeholder="State/Province" />
-              </Form.Item>
-            </div>
+                <Radio value="default" className="text-lg">
+                  Use my default address
+                </Radio>{" "}
+                <br />
+                <Radio value="different" className="text-lg">
+                  Ship to a different address
+                </Radio>
+              </Radio.Group>
+            </Form.Item>
+
             <Form.Item
-              label="Street Address"
-              name="streetAddress"
+              label="Address"
+              name="address"
               rules={[{ required: true }]}
             >
-              <Input className="py-2" placeholder="Street Address" />
+              <Input className="py-2" placeholder="Address" />
             </Form.Item>
-            <Form.Item
-              label="Email"
-              name="email"
-              rules={[{ required: true, type: "email" }]}
-            >
-              <Input className="py-2" placeholder="Email" />
-            </Form.Item>
-            <Form.Item label="Phone" name="phone" rules={[{ required: true }]}>
-              <Input className="py-2" placeholder="Phone" />
-            </Form.Item>
+
             <Heading className="">Additional Info</Heading>
             <Form.Item label="Order Notes (Optional)" name="orderNotes">
               <Input.TextArea placeholder="Order Notes (Optional)" />
             </Form.Item>
           </div>
 
-          <div className="md:w-[30%] shadow-lg border border-t-8 border-t-[#292C61] rounded-2xl p-1">
-            <Heading className="mx-5">Order Summary</Heading>
-            <div className="w-full p-5 border-none">
-              <ul>
-                {cart?.map((item) => (
-                  <li
-                    key={item.key}
-                    className="flex items-center border-t justify-between py-2"
-                  >
-                    <Image
-                      src={item.product.image}
-                      alt={item.product.name}
-                      className="w-16 h-16 object-cover"
-                      width={100}
-                      height={100}
-                    />
-                    <span className="ml-4">{item.product.name}</span>
-                    <span className="ml-4">
-                      ${item.product.price.toFixed(2)}
-                    </span>
+          <div className="md:w-[30%] shadow-lg border border-t-8 border-t-[#292C61] rounded-2xl p-1 flex flex-col justify-between">
+            <div>
+              <Heading className="mx-5">Order Summary</Heading>
+              <div className="w-full p-5 border-none">
+                <ul>
+                  {cart?.map((item) => (
+                    <li
+                      key={item.key}
+                      className="flex items-center border-t justify-between py-2"
+                    >
+                      <Image
+                        src={item.product.image}
+                        alt={item.product.name}
+                        className="w-16 h-16 object-cover"
+                        width={100}
+                        height={100}
+                      />
+                      <span className="ml-4">{item.product.name}</span>
+                      <span className="ml-4">
+                        ${item.product.price.toFixed(2)}
+                      </span>
+                    </li>
+                  ))}
+                  <li className="flex items-center justify-between font-bold py-3 border-t">
+                    <span>Subtotal:</span>
+                    <span>${totalPrice.toFixed(2)}</span>
                   </li>
-                ))}
-                <li className="flex items-center justify-between font-bold py-3 border-t">
-                  <span>Subtotal:</span>
-                  <span>${totalPrice.toFixed(2)}</span>
-                </li>
-                <li className="flex items-center justify-between font-bold py-3 border-t">
-                  <span>Shipping:</span>
-                  <span>Free</span>
-                </li>
-                <li className="flex items-center justify-between font-bold py-3 border-t">
-                  <span>Total:</span>
-                  <span>${totalPrice.toFixed(2)}</span>
-                </li>
-              </ul>
+                  <li className="flex items-center justify-between font-bold py-3 border-t">
+                    <span>Shipping:</span>
+                    <span>Free</span>
+                  </li>
+                  <li className="flex items-center justify-between font-bold py-3 border-t">
+                    <span>Total:</span>
+                    <span>${totalPrice.toFixed(2)}</span>
+                  </li>
+                </ul>
+              </div>
             </div>
 
-            <h2 className="text-lg mx-6 mb-4">Payment Method</h2>
-            <div className="px-5">
-              <Form.Item
-                name="paymentMethod"
-                className="mx-6"
-                rules={[{ required: true }]}
-              >
-                <Radio.Group>
-                  <Radio value="cash">Cash on Delivery</Radio>
-                  <Radio value="paypal">PayPal</Radio>
-                </Radio.Group>
-              </Form.Item>
-            </div>
             <Button
               htmlType="submit"
               className=" w-full !bg-[#292C61] !text-white !text-xl !font-semibold mb-1 !py-5 !rounded-3xl"
