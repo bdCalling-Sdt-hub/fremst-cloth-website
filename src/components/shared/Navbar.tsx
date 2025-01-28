@@ -4,7 +4,7 @@
 import Image from "next/image";
 import Link from "next/link";
 import { AiOutlineMenu } from "react-icons/ai";
-import { useState } from "react";
+import { useEffect, useState } from "react";
 import { Badge, ConfigProvider, Select, Tooltip } from "antd";
 import { TbChevronDown } from "react-icons/tb";
 import NavItems from "./NavItems";
@@ -19,13 +19,29 @@ const plusJakarta = Plus_Jakarta_Sans({
 
 const Navbar = () => {
   const [showDrawer, setShowDrawer] = useState(false);
+  const [tooltipWidth, setTooltipWidth] = useState("290px");
   //   const pathname = usePathname();
   const totalCredit = 1000;
   const remainingCredit = 954;
 
+  useEffect(() => {
+    const updateTooltipWidth = () => {
+      if (window.innerWidth <= 768) {
+        setTooltipWidth("200px");
+      } else {
+        setTooltipWidth("290px");
+      }
+    };
+
+    updateTooltipWidth(); // Set initial value
+    window.addEventListener("resize", updateTooltipWidth);
+
+    return () => window.removeEventListener("resize", updateTooltipWidth);
+  }, []);
+
   const tooltipContent = (
     <div className="flex items-center justify-between">
-      <div className="w-[40px] h-10 bg-primary text-white rounded-full flex items-center justify-center font-semibold text-[12px]">
+      <div className="w-[40px] hidden h-10 bg-primary text-white rounded-full md:flex items-center justify-center font-semibold text-[12px]">
         954$
       </div>
       <div className="p-2 w-[235px]">
@@ -186,12 +202,12 @@ const Navbar = () => {
                 placement="topRight"
                 overlayInnerStyle={{
                   color: "rgba(0, 0, 0, 0.88)",
-                  width: "290px",
+                  width: tooltipWidth,
                 }}
                 overlayClassName="tooltip-content"
               >
                 <div className="border-2 p-1 border-primary w-10 h-10 rounded-full text-gray-600 flex items-center justify-center text-[12px] font-semibold">
-                  954$
+                  {remainingCredit}$
                 </div>
               </Tooltip>
 
