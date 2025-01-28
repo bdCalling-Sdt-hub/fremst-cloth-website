@@ -9,7 +9,36 @@ const productServiceApi = api.injectEndpoints({
       }),
       providesTags: ["category"],
     }),
+
+    getAllProducts: builder.query({
+      query: () => ({
+        url: "/product",
+        method: "GET",
+      }),
+      providesTags: ["product"],
+    }),
+
+    getTopProducts: builder.query({
+      query: () => ({
+        url: "/product?sortBy=totalSales&sortOrder=desc",
+        method: "GET",
+      }),
+      providesTags: ["product"],
+    }),
+
+    getWinterCollection: builder.query({
+      query: () => ({
+        url: "/product?searchTerm=winter",
+        method: "GET",
+      }),
+      providesTags: ["product"],
+    }),
   }),
 });
 
-export const { useGetCategoriesQuery } = productServiceApi;
+export const {
+  useGetCategoriesQuery,
+  useGetAllProductsQuery,
+  useGetTopProductsQuery,
+  useGetWinterCollectionQuery,
+} = productServiceApi;

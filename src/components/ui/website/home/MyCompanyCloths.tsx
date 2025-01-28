@@ -7,6 +7,8 @@ import Slider, { Settings } from "react-slick";
 import { FaArrowLeftLong, FaArrowRightLong } from "react-icons/fa6";
 import { Plus_Jakarta_Sans } from "next/font/google";
 import ProductCard from "@/components/shared/ProductCard";
+import { useGetAllProductsQuery } from "@/redux/apiSlices/productSlice";
+import { Loader2 } from "lucide-react";
 
 const plusJakarta = Plus_Jakarta_Sans({
   subsets: ["latin"],
@@ -18,59 +20,23 @@ const bigShoulders = Big_Shoulders_Display({
   weight: ["400", "700"],
 });
 
-const products = [
-  {
-    id: 1,
-    title: "Vinterhanske - Aquaguard Thermo",
-    price: 23.9,
-    category: "Lite wear",
-    image: "/cat6.svg",
-    soldOut: false,
-  },
-  {
-    id: 2,
-    title: "Vinterhanske - Aquaguard Thermo",
-    price: 23.9,
-    category: "Lite wear",
-    image: "/cat6.svg",
-    soldOut: true,
-  },
-  {
-    id: 3,
-    title: "Vinterhanske - Aquaguard Thermo",
-    price: 23.9,
-    category: "Lite wear",
-    image: "/cat6.svg",
-    soldOut: false,
-  },
-  {
-    id: 4,
-    title: "Vinterhanske - Aquaguard Thermo",
-    price: 23.9,
-    category: "Lite wear",
-    image: "/cat6.svg",
-    soldOut: true,
-  },
-  {
-    id: 5,
-    title: "Vinterhanske - Aquaguard Thermo",
-    price: 23.9,
-    category: "Lite wear",
-    image: "/cat6.svg",
-    soldOut: false,
-  },
-  {
-    id: 6,
-    title: "Vinterhanske - Aquaguard Thermo",
-    price: 23.9,
-    category: "Lite wear",
-    image: "/cat6.svg",
-    soldOut: true,
-  },
-];
-
 const MyCompanyCloths = () => {
   const [activeIndex, setActiveIndex] = useState(0);
+
+  const { data: getAllProducts, isFetching } =
+    useGetAllProductsQuery(undefined);
+
+  if (isFetching) {
+    return (
+      <div className="flex items-center justify-center mt-10">
+        <Loader2 className="animate-spin w-10 h-10 text-gray-600" />
+      </div>
+    );
+  }
+
+  const productsData = getAllProducts?.data;
+  // console.log(productsData);
+
   const CustomNextArrow = ({ onClick }: { onClick?: () => void }) => (
     <div
       className=" absolute lg:flex hidden  lg:-right-10 right-0 top-1/3 cursor-pointer   "
@@ -184,9 +150,13 @@ const MyCompanyCloths = () => {
       <div className="w-full ">
         <div className=" lg:w-[1300px] md:w-[600px]  ">
           <Slider {...settings}>
-            {products.map((product) => (
-              <div key={product.id} className="ms-5">
-                <ProductCard product={product} />
+            {productsData?.map((product: any) => (
+              <div key={product._id} className="ms-5">
+                {product.name ? (
+                  <ProductCard product={product} />
+                ) : (
+                  <p>Invalid Product Data</p>
+                )}
               </div>
             ))}
           </Slider>

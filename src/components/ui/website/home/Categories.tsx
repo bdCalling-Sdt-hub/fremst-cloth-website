@@ -34,7 +34,7 @@ const Categories = () => {
   }
 
   const categories = allCategories?.data;
-  console.log(allCategories);
+  // console.log(allCategories);
 
   const CustomNextArrow = ({ onClick }: { onClick?: () => void }) => (
     <div
