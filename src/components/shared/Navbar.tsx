@@ -12,6 +12,7 @@ import MobileDrawer from "./MobileDrawer";
 import { HiOutlineShoppingBag } from "react-icons/hi";
 import { Plus_Jakarta_Sans } from "next/font/google";
 import profileImg from "../../assets/randomProfile4.jpg";
+import { useGetUserProfileQuery } from "@/redux/apiSlices/authSlice";
 const plusJakarta = Plus_Jakarta_Sans({
   subsets: ["latin"],
   weight: ["400", "500", "600", "700"],
@@ -20,6 +21,9 @@ const plusJakarta = Plus_Jakarta_Sans({
 const Navbar = () => {
   const [showDrawer, setShowDrawer] = useState(false);
   const [tooltipWidth, setTooltipWidth] = useState("290px");
+  const { data: userProfileData, isLoading } =
+    useGetUserProfileQuery(undefined);
+
   //   const pathname = usePathname();
   const totalCredit = 1000;
   const remainingCredit = 954;
@@ -38,6 +42,13 @@ const Navbar = () => {
 
     return () => window.removeEventListener("resize", updateTooltipWidth);
   }, []);
+
+  if (isLoading) {
+    return <div>Loading...</div>;
+  }
+
+  const userProfile = userProfileData?.data?.user || [];
+  // console.log(userProfile);
 
   const tooltipContent = (
     <div className="flex items-center justify-between">
@@ -187,45 +198,53 @@ const Navbar = () => {
               <NavItems items={items} />
             </div>
 
-            <div className="flex items-center space-x-4">
-              <div className="hidden md:block">
-                <Badge count="4">
-                  <Link href={"/cart"} className="hidden md:flex">
-                    <HiOutlineShoppingBag size={34} color="#292C61" />
-                  </Link>
-                </Badge>
-              </div>
-
-              <Tooltip
-                title={tooltipContent}
-                color="white"
-                placement="topRight"
-                overlayInnerStyle={{
-                  color: "rgba(0, 0, 0, 0.88)",
-                  width: tooltipWidth,
-                }}
-                overlayClassName="tooltip-content"
-              >
-                <div className="border-2 p-1 border-primary w-10 h-10 rounded-full text-gray-600 flex items-center justify-center text-[12px] font-semibold">
-                  {remainingCredit}$
+            {userProfile?.role ? (
+              <div className="flex items-center space-x-4">
+                <div className="hidden md:block">
+                  <Badge count="4">
+                    <Link href={"/cart"} className="hidden md:flex">
+                      <HiOutlineShoppingBag size={34} color="#292C61" />
+                    </Link>
+                  </Badge>
                 </div>
-              </Tooltip>
 
-              <Link href={"/profile"}>
-                <div className="flex items-center justify-center border-4 pe-4 p-1 rounded-full gap-2">
-                  <div>
-                    <Image
-                      src={profileImg}
-                      alt=""
-                      height={44}
-                      width={44}
-                      className="w-12 h-12 rounded-full object-cover"
-                    />
+                <Tooltip
+                  title={tooltipContent}
+                  color="white"
+                  placement="topRight"
+                  overlayInnerStyle={{
+                    color: "rgba(0, 0, 0, 0.88)",
+                    width: tooltipWidth,
+                  }}
+                  overlayClassName="tooltip-content"
+                >
+                  <div className="border-2 p-1 border-primary w-10 h-10 rounded-full text-gray-600 flex items-center justify-center text-[12px] font-semibold">
+                    {remainingCredit}$
                   </div>
-                  <p className="text-xl">Asad</p>
-                </div>
+                </Tooltip>
+
+                <Link href={"/profile"}>
+                  <div className="flex items-center justify-center border-4 pe-4 p-1 rounded-full gap-2">
+                    <div>
+                      <Image
+                        src={profileImg}
+                        alt=""
+                        height={44}
+                        width={44}
+                        className="w-12 h-12 rounded-full object-cover"
+                      />
+                    </div>
+                    <p className="text-xl">Asad</p>
+                  </div>
+                </Link>
+              </div>
+            ) : (
+              <Link href="/login">
+                <button className="bg-primary px-10 text-white py-2 rounded-md">
+                  Login
+                </button>
               </Link>
-            </div>
+            )}
           </div>
         </nav>
 

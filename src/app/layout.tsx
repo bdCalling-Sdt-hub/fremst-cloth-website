@@ -2,6 +2,7 @@ import type { Metadata } from "next";
 import { AntdRegistry } from "@ant-design/nextjs-registry";
 import "./globals.css";
 import { Toaster } from "react-hot-toast";
+import CustomProvider from "@/utils/CustomProvider";
 
 export const metadata: Metadata = {
   title: "FREMST E-COMMERCE",
@@ -16,7 +17,7 @@ export default function RootLayout({
     <html lang="en">
       <body className={`antialiased`}>
         <AntdRegistry>
-          {children}
+          <CustomProvider>{children}</CustomProvider>
           <Toaster position="top-center" />
         </AntdRegistry>
       </body>

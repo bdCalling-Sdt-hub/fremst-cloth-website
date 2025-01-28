@@ -45,7 +45,13 @@ const LoginModal: React.FC = () => {
       >
         <div className="py-10">
           <div className="flex items-center justify-center">
-            <Image className="w-40 h-20 my-5" src={logo} alt="Logo" />
+            <Image
+              className="w-40 h-20 my-5"
+              src={logo}
+              width={120}
+              height={80}
+              alt="Logo"
+            />
           </div>
           <p className="text-xl text-center">
             Welcome back! Please log in to continue.

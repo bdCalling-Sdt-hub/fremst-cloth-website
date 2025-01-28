@@ -1,18 +1,43 @@
 "use client";
 
 import TextInput from "@/components/shared/TextInput";
+import { useLoginMutation } from "@/redux/apiSlices/authSlice";
 import { Checkbox, Form, Input } from "antd";
 import Link from "next/link";
 import { useRouter } from "next/navigation";
 import React from "react";
+import toast from "react-hot-toast";
+import Cookies from "js-cookie";
 
 const Login = () => {
+  const [remember, setRemember] = React.useState(false);
   const router = useRouter();
+
+  const [login] = useLoginMutation();
 
   const onFinish = async (values: { email: string; password: string }) => {
     console.log(values);
-
-    router.push("/");
+    try {
+      const res = await login(values).unwrap();
+      if (res?.success) {
+        if (remember) {
+          localStorage.setItem("authToken", res?.data?.accessToken);
+          localStorage.setItem("refreshToken", res?.data?.refreshToken);
+          localStorage.setItem("role", res?.data?.role);
+          Cookies.set("refreshToken", res?.data?.refreshToken);
+          router.push("/");
+        } else {
+          sessionStorage.setItem("authToken", res?.data?.accessToken);
+          sessionStorage.setItem("refreshToken", res?.data?.refreshToken);
+          sessionStorage.setItem("role", res?.data?.role);
+          Cookies.set("refreshToken", res?.data?.refreshToken);
+          router.push("/");
+        }
+        toast.success(res?.message);
+      }
+    } catch (error) {
+      console.log(error);
+    }
   };
 
   return (
@@ -57,7 +82,12 @@ const Login = () => {
             name="remember"
             valuePropName="checked"
           >
-            <Checkbox>Remember me</Checkbox>
+            <Checkbox
+              checked={remember}
+              onChange={(e) => setRemember(e.target.checked)}
+            >
+              Remember me
+            </Checkbox>
           </Form.Item>
 
           <a

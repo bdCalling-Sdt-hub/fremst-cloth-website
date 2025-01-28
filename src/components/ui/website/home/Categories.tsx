@@ -1,4 +1,3 @@
-/* eslint-disable @next/next/no-img-element */
 "use client";
 import Heading from "@/components/shared/Heading";
 import React, { useState } from "react";
@@ -7,52 +6,36 @@ import "slick-carousel/slick/slick-theme.css";
 import { FaArrowLeftLong, FaArrowRightLong } from "react-icons/fa6";
 import Slider, { Settings } from "react-slick";
 import { Big_Shoulders_Display } from "next/font/google";
+import { useGetCategoriesQuery } from "@/redux/apiSlices/productSlice";
+import Image from "next/image";
+import { getImageUrl } from "@/utils/getImageUrl";
 const bigShoulders = Big_Shoulders_Display({
   subsets: ["latin"],
   weight: ["400", "700"],
 });
 
-const categories = [
-  {
-    title: "Fatigues",
-    image: "/cat6.svg",
-  },
-  {
-    title: "Protective Coverage",
-    image: "/cat1.svg",
-  },
-  {
-    title: "Fall Protection",
-    image: "/cat2.svg",
-  },
-  {
-    title: "Tools",
-    image: "/cat6.svg",
-  },
-  {
-    title: "Personal Protection",
-    image: "/cat5.svg",
-  },
-  {
-    title: "Work Shoes",
-    image: "/cat3.svg",
-  },
-  {
-    title: "Fatigues",
-    image: "/cat6.svg",
-  },
-  {
-    title: "Protective Coverage",
-    image: "/cat1.svg",
-  },
-  {
-    title: "Fall Protection",
-    image: "/cat2.svg",
-  },
-];
+interface Category {
+  image: string;
+  title: string;
+  // Add other properties as needed
+}
 
 const Categories = () => {
   const [activeIndex, setActiveIndex] = useState(0);
+
+  const { data: allCategories, isFetching } = useGetCategoriesQuery(undefined);
+
+  if (isFetching) {
+    return (
+      <div className="flex items-center justify-center mt-10">
+        <div className="animate-spin rounded-full h-10 w-10 border-t-2 border-b-2 border-white"></div>
+      </div>
+    );
+  }
+
+  const categories = allCategories?.data;
+  console.log(allCategories);
+
   const CustomNextArrow = ({ onClick }: { onClick?: () => void }) => (
     <div
       className=" absolute lg:flex hidden  lg:-right-10 right-0 top-1/3 cursor-pointer   "
@@ -155,13 +138,15 @@ const Categories = () => {
       <div className="w-full ">
         <div className="lg:w-[1300px] md:w-[600px] mt-[35px]">
           <Slider {...settings}>
-            {categories.map((item, index) => (
+            {categories?.map((item: Category, index: number) => (
               <div key={index} className="flex flex-col items-center gap-2 ">
                 <div className=" bg-[#f8fafe] w-[180px] h-[180px] flex items-center justify-center hover:border-2 hover:border-primary rounded cursor-pointer">
-                  <img
-                    src={item.image}
+                  <Image
+                    src={getImageUrl(item?.image)}
                     alt={item.title}
                     className="w-[160px] h-[160px]"
+                    width={500}
+                    height={500}
                   />
                 </div>
                 <p
