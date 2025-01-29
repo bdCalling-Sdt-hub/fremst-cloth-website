@@ -1,252 +1,129 @@
 "use client";
 
-import { useState } from "react";
+import { useState, useEffect } from "react";
+import debounce from "lodash/debounce"; // Install lodash if not installed
 import Heading from "@/components/shared/Heading";
 import ProductCard from "@/components/shared/ProductCard";
-import { Slider, Pagination, Select } from "antd";
+import {
+  Slider,
+  Pagination,
+  Select,
+  Checkbox,
+  Spin,
+  ConfigProvider,
+} from "antd";
 import { Big_Shoulders_Display } from "next/font/google";
+import {
+  useGetAllProductsQuery,
+  useGetCategoriesQuery,
+} from "@/redux/apiSlices/productSlice";
+
 const bigShoulders = Big_Shoulders_Display({
   subsets: ["latin"],
   weight: ["400", "700"],
 });
 
-const category = [
-  { name: "Workwear", items: 5 },
-  { name: "Casual Wear", items: 8 },
-  { name: "Formal Wear", items: 12 },
-  { name: "Sportswear", items: 10 },
-  { name: "Winter Collection", items: 7 },
-  { name: "Summer Collection", items: 15 },
-  { name: "Footwear", items: 6 },
-  { name: "Accessories", items: 9 },
-  { name: "Ethnic Wear", items: 4 },
-  { name: "Party Wear", items: 3 },
-];
-
-const products = [
-  {
-    id: 1,
-    title: "Vinterhanske - Aquaguard Thermo",
-    price: 23.9,
-    category: "Lite wear",
-    image: "/cat6.svg",
-    soldOut: false,
-  },
-  {
-    id: 2,
-    title: "Regnhanske - DryGuard Pro",
-    price: 29.5,
-    category: "Rainwear",
-    image: "/cat1.svg",
-    soldOut: true,
-  },
-  {
-    id: 3,
-    title: "Arbeidshanske - Iron Grip",
-    price: 19.9,
-    category: "Workwear",
-    image: "/cat2.svg",
-    soldOut: false,
-  },
-  {
-    id: 4,
-    title: "Skalljakke - Stormbreaker",
-    price: 89.9,
-    category: "Outerwear",
-    image: "/cat3.svg",
-    soldOut: true,
-  },
-  {
-    id: 5,
-    title: "Softshelljakke - Cozy Wind",
-    price: 74.5,
-    category: "Outerwear",
-    image: "/cat4.svg",
-    soldOut: false,
-  },
-  {
-    id: 6,
-    title: "Sportsjakke - Runner’s Shield",
-    price: 49.9,
-    category: "Sportswear",
-    image: "/cat5.svg",
-    soldOut: true,
-  },
-  {
-    id: 7,
-    title: "Vinterjakke - FrostGuard",
-    price: 129.9,
-    category: "Winterwear",
-    image: "/cat6.svg",
-    soldOut: false,
-  },
-  {
-    id: 8,
-    title: "Hettegenser - Comfort Fleece",
-    price: 35.5,
-    category: "Casual Wear",
-    image: "/cat1.svg",
-    soldOut: true,
-  },
-  {
-    id: 9,
-    title: "T-skjorte - Everyday Fit",
-    price: 15.9,
-    category: "Casual Wear",
-    image: "/cat2.svg",
-    soldOut: false,
-  },
-  {
-    id: 10,
-    title: "Treningsbukse - Power Stretch",
-    price: 39.9,
-    category: "Sportswear",
-    image: "/cat3.svg",
-    soldOut: true,
-  },
-  {
-    id: 11,
-    title: "Lue - WoolWarm",
-    price: 12.9,
-    category: "Accessories",
-    image: "/cat4.svg",
-    soldOut: false,
-  },
-  {
-    id: 12,
-    title: "Buff - NeckGuard Pro",
-    price: 8.5,
-    category: "Accessories",
-    image: "/cat5.svg",
-    soldOut: false,
-  },
-  {
-    id: 13,
-    title: "Fleecehanske - Arctic Comfort",
-    price: 22.9,
-    category: "Winterwear",
-    image: "/cat6.svg",
-    soldOut: true,
-  },
-  {
-    id: 14,
-    title: "Dunjakke - Snowbound",
-    price: 199.9,
-    category: "Winterwear",
-    image: "/cat1.svg",
-    soldOut: false,
-  },
-  {
-    id: 15,
-    title: "Ullgenser - Nordic Heritage",
-    price: 89.5,
-    category: "Winterwear",
-    image: "/cat2.svg",
-    soldOut: true,
-  },
-  {
-    id: 16,
-    title: "Regnbukse - DryZone Guard",
-    price: 39.9,
-    category: "Rainwear",
-    image: "/cat3.svg",
-    soldOut: false,
-  },
-  {
-    id: 17,
-    title: "Arbeidsbukse - Heavy Duty Pro",
-    price: 59.9,
-    category: "Workwear",
-    image: "/cat4.svg",
-    soldOut: true,
-  },
-  {
-    id: 18,
-    title: "Joggesko - Trail Runner",
-    price: 79.9,
-    category: "Sportswear",
-    image: "/cat5.svg",
-    soldOut: false,
-  },
-  {
-    id: 19,
-    title: "Sneakers - Everyday Comfort",
-    price: 49.9,
-    category: "Casual Wear",
-    image: "/cat6.svg",
-    soldOut: true,
-  },
-  {
-    id: 20,
-    title: "Regnjakke - StormGuard",
-    price: 69.9,
-    category: "Rainwear",
-    image: "/cat7.svg",
-    soldOut: false,
-  },
-];
-
 const ShopPage = () => {
   const [currentPage, setCurrentPage] = useState(1);
   const [pageSize, setPageSize] = useState(12);
+  const [checkedCategories, setCheckedCategories] = useState<string[]>([]);
+  const [priceRange, setPriceRange] = useState<[number, number]>([0, 3000000]);
+  const [debouncedPriceRange, setDebouncedPriceRange] = useState(priceRange);
 
-  const handlePageChange = (page: number, pageSize?: number) => {
-    setCurrentPage(page);
-    if (pageSize) {
-      setPageSize(pageSize);
+  useEffect(() => {
+    const handler = debounce(() => {
+      setDebouncedPriceRange(priceRange);
+    }, 500);
+
+    handler();
+    return () => handler.cancel();
+  }, [priceRange]);
+
+  const { data: getAllProducts, isFetching } = useGetAllProductsQuery({
+    category: checkedCategories,
+    minPrice: debouncedPriceRange[0],
+    maxPrice: debouncedPriceRange[1],
+  });
+
+  const { data: getAllCategories } = useGetCategoriesQuery(undefined);
+
+  const handlePriceChange = (value: number | number[] | [number, number]) => {
+    if (Array.isArray(value)) {
+      if (
+        value.length === 2 &&
+        typeof value[0] === "number" &&
+        typeof value[1] === "number"
+      ) {
+        setPriceRange(value as [number, number]);
+      } else {
+        console.error(
+          "Invalid price range. Expected an array with exactly two numbers."
+        );
+      }
+    } else {
+      setPriceRange([value, priceRange[1]]);
     }
   };
 
-  const paginatedProducts = products.slice(
-    (currentPage - 1) * pageSize,
-    currentPage * pageSize
-  );
+  const handleCategoryChange = (values: string[]) => {
+    setCheckedCategories([...values]);
+  };
+
+  const products = getAllProducts?.data || [];
+  const categories = getAllCategories?.data || [];
 
   return (
     <div className="container">
       <h1 className="my-5">
-        <Heading className="">Shop</Heading>
+        <h1>Shop</h1>
       </h1>
       <h1 className="my-5">
-        Showing <span className="font-bold">1-{pageSize} items</span> out of{" "}
-        <span className="font-bold">{products?.length} results</span>
+        Showing <span className="font-bold">1-{pageSize} items</span> out of
+        <span className="font-bold"> {products.length} results</span>
       </h1>
       <div className="md:flex justify-center gap-10">
+        {/* Sidebar - Filters */}
         <div className="md:w-[30%]">
           <h1
             className={`text-xl font-bold uppercase ${bigShoulders.className}`}
           >
             Filter By Price
           </h1>
-          <Slider range defaultValue={[0.0, 1000.0]} />
-          <p className="font-bold">Price: $0.00 - $1000.00</p>
+          <ConfigProvider
+            theme={{
+              token: {
+                colorPrimary: "#292C61",
+              },
+            }}
+          >
+            <Slider
+              range
+              max={3000000}
+              min={0}
+              value={priceRange} // Controlled component
+              onChange={handlePriceChange}
+            />
+          </ConfigProvider>
+          <p className="font-bold">
+            Price: ${priceRange[0]}.00 - ${priceRange[1]}.00
+          </p>
+
+          {/* Category Filter */}
           <div className="my-10">
-            <h1>
-              <Heading className="text-black">Product Category</Heading>
-            </h1>
-            <div>
-              {category?.map((item) => (
-                <div
-                  key={item.name}
-                  className="my-2 flex items-center justify-between"
-                >
-                  <div className="space-x-5">
-                    <input
-                      className="w-5 h-5"
-                      type="checkbox"
-                      id={item.name}
-                      name={item.name}
-                    />
-                    <label className="text-xl" htmlFor={item.name}>
-                      {item.name}
-                    </label>
-                  </div>
-                  <span className="ml-2 text-xl">({item.items})</span>
-                </div>
-              ))}
-            </div>
+            <Heading className="text-black">Product Category</Heading>
+            <Checkbox.Group
+              className="flex flex-col gap-2 mt-3"
+              options={categories.map((item: any) => ({
+                label: item.title,
+                value: item._id,
+              }))}
+              value={checkedCategories}
+              onChange={handleCategoryChange}
+            />
           </div>
         </div>
+
+        {/* Product List */}
         <div className="md:w-[70%] mb-20">
           <div className="flex justify-end mb-5">
             <Select
@@ -254,26 +131,37 @@ const ShopPage = () => {
               style={{ width: 200 }}
               allowClear
             >
-              {category?.map((item) => (
-                <Select.Option key={item.name} value={item.name}>
-                  {item.name}
+              {categories.map((item: any) => (
+                <Select.Option key={item._id} value={item._id}>
+                  {item.title}
                 </Select.Option>
               ))}
             </Select>
           </div>
-          <div className="grid md:grid-cols-3 gap-10 grid-cols-1">
-            {paginatedProducts?.map((product) => (
-              <ProductCard product={product} key={product.id} />
-            ))}
-          </div>
+
+          {/* Product Cards (Show previous data while fetching new ones) */}
+          {isFetching && products.length === 0 ? (
+            <div className="flex items-center justify-center mt-10">
+              <Spin size="large" />
+            </div>
+          ) : (
+            <div className="grid md:grid-cols-3 gap-10 grid-cols-1">
+              {products.map((product: any) => (
+                <ProductCard product={product} key={product.id} />
+              ))}
+            </div>
+          )}
+
+          {/* Pagination */}
           <div className="flex justify-center mt-10">
             <Pagination
               current={currentPage}
               pageSize={pageSize}
               total={products.length}
-              onChange={handlePageChange}
-              showSizeChanger
-              pageSizeOptions={["6", "12", "24"]}
+              onChange={(page, size) => {
+                setCurrentPage(page);
+                setPageSize(size || 12);
+              }}
             />
           </div>
         </div>
