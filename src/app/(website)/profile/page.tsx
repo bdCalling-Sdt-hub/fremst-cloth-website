@@ -58,7 +58,7 @@ const ProfilePage = () => {
   const userDetails = userProfileData?.data || [];
   const userProfile = userProfileData?.data?.user || [];
   const orders = orderData?.data?.data || [];
-  console.log(userDetails);
+  // console.log(userDetails);
 
   const showModal = () => {
     if (!userProfile) {

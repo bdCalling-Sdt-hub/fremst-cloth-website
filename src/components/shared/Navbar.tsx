@@ -12,6 +12,7 @@ import { HiOutlineShoppingBag } from "react-icons/hi";
 import { Plus_Jakarta_Sans } from "next/font/google";
 import profileImg from "../../assets/randomProfile4.jpg";
 import { useGetUserProfileQuery } from "@/redux/apiSlices/authSlice";
+import { getImageUrl } from "@/utils/getImageUrl";
 const plusJakarta = Plus_Jakarta_Sans({
   subsets: ["latin"],
   weight: ["400", "500", "600", "700"],
@@ -44,7 +45,7 @@ const Navbar = () => {
 
   const userProfile = userProfileData?.data?.user || [];
   const { budget, budgetLeft } = userProfileData?.data || {};
-  // console.log(userProfile);
+  console.log(userProfile);
 
   const tooltipContent = (
     <div className="flex items-center justify-between">
@@ -126,7 +127,7 @@ const Navbar = () => {
                   overlayClassName="tooltip-content"
                 >
                   <div className="border-2 p-1 border-primary w-14 h-14 rounded-full text-gray-600 flex items-center justify-center text-[12px] font-semibold">
-                    {budgetLeft}$
+                    ${Math.trunc(budgetLeft)}
                   </div>
                 </Tooltip>
 
@@ -134,14 +135,14 @@ const Navbar = () => {
                   <div className="flex items-center justify-center border-4 pe-4 p-1 rounded-full gap-2">
                     <div>
                       <Image
-                        src={profileImg}
+                        src={getImageUrl(userProfile?.profile)}
                         alt=""
                         height={44}
                         width={44}
                         className="w-12 h-12 rounded-full object-cover"
                       />
                     </div>
-                    <p className="text-xl">Asad</p>
+                    <p className="text-xl">{userProfile?.name}</p>
                   </div>
                 </Link>
               </div>
