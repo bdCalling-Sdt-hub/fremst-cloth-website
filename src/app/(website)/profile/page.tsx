@@ -27,155 +27,16 @@ import { IoIosCalculator } from "react-icons/io";
 import { RiMoneyCnyCircleLine } from "react-icons/ri";
 import { GiMoneyStack } from "react-icons/gi";
 import profileBanner from "../../../assets/profileBanner.png";
-import profileImg from "../../../assets/randomProfile4.jpg";
+
 import Heading from "@/components/shared/Heading";
 import toast from "react-hot-toast";
 import { LuUpload } from "react-icons/lu";
-import { useGetUserProfileQuery } from "@/redux/apiSlices/authSlice";
+import {
+  useGetUserProfileQuery,
+  useUpdateUserProfileMutation,
+} from "@/redux/apiSlices/authSlice";
 import { getImageUrl } from "@/utils/getImageUrl";
 import { useOrdersByUserQuery } from "@/redux/apiSlices/orderSlice";
-
-const profile = {
-  name: "John Doe",
-  designation: "Marketing Manager",
-  company: "TechSphere Innovations Ltd.",
-  email: "johndoe@example.com",
-  phone: "+1 123 456 7890",
-  address: "123 Elm Street, Springfield, USA",
-  profileImage: profileImg.src,
-  budgetDetails: {
-    assigned: "50,000",
-    duration: "12 months",
-    assignDate: "2024-01-01",
-    expirationDate: "2024-12-31",
-  },
-  totalOrder: 120,
-  totalBudget: "50,000",
-  totalSpend: "35,000",
-  remainingBudget: "15,000",
-  orderHistory: [
-    {
-      _id: "1",
-      productName: "Digital Marketing Campaign",
-      item: "Social Media Ads",
-      price: "5,000",
-      status: "Completed",
-      date: "2024-02-15",
-    },
-    {
-      _id: "2",
-      productName: "SEO Optimization",
-      item: "On-page SEO",
-      price: "3,000",
-      status: "Completed",
-      date: "2024-03-10",
-    },
-    {
-      _id: "3",
-      productName: "Brand Design",
-      item: "Logo Design",
-      price: "2,000",
-      status: "In Progress",
-      date: "2024-12-20",
-    },
-    {
-      _id: "4",
-      productName: "Content Marketing",
-      item: "Blog Posts",
-      price: "10,000",
-      status: "Pending",
-      date: "2024-12-25",
-    },
-    {
-      _id: "5",
-      productName: "PPC Campaign",
-      item: "Google Ads",
-      price: "8,000",
-      status: "Completed",
-      date: "2024-04-05",
-    },
-    {
-      _id: "6",
-      productName: "Website Development",
-      item: "E-commerce Website",
-      price: "50,000",
-      status: "In Progress",
-      date: "2024-05-12",
-    },
-    {
-      _id: "7",
-      productName: "Email Marketing",
-      item: "Newsletter Campaign",
-      price: "4,000",
-      status: "Pending",
-      date: "2024-06-15",
-    },
-    {
-      _id: "8",
-      productName: "App Development",
-      item: "Mobile App",
-      price: "100,000",
-      status: "In Progress",
-      date: "2024-07-18",
-    },
-    {
-      _id: "9",
-      productName: "Video Marketing",
-      item: "YouTube Ads",
-      price: "12,000",
-      status: "Completed",
-      date: "2024-08-25",
-    },
-    {
-      _id: "10",
-      productName: "Graphic Design",
-      item: "Banner Design",
-      price: "3,500",
-      status: "Pending",
-      date: "2024-09-10",
-    },
-    {
-      _id: "11",
-      productName: "SEO Services",
-      item: "Technical SEO",
-      price: "6,000",
-      status: "Completed",
-      date: "2024-10-01",
-    },
-    {
-      _id: "12",
-      productName: "Brand Strategy",
-      item: "Market Analysis",
-      price: "7,500",
-      status: "In Progress",
-      date: "2024-10-20",
-    },
-    {
-      _id: "13",
-      productName: "Photography",
-      item: "Product Photoshoot",
-      price: "15,000",
-      status: "Pending",
-      date: "2024-11-05",
-    },
-    {
-      _id: "14",
-      productName: "Social Media Management",
-      item: "Monthly Content Plan",
-      price: "9,000",
-      status: "Completed",
-      date: "2024-11-15",
-    },
-    {
-      _id: "15",
-      productName: "Public Relations",
-      item: "Press Release",
-      price: "20,000",
-      status: "Completed",
-      date: "2024-11-30",
-    },
-  ],
-};
 
 const ProfilePage = () => {
   const [isModalVisible, setIsModalVisible] = useState(false);
@@ -188,6 +49,7 @@ const ProfilePage = () => {
   const { data: orderData, isLoading: orderLoading } = useOrdersByUserQuery(
     userProfileData?.data?._id
   );
+  const [updateProfile] = useUpdateUserProfileMutation();
 
   if (isLoading || orderLoading) {
     return <div>Loading...</div>;
@@ -196,10 +58,23 @@ const ProfilePage = () => {
   const userDetails = userProfileData?.data || [];
   const userProfile = userProfileData?.data?.user || [];
   const orders = orderData?.data?.data || [];
-  // console.log(orders);
+  console.log(userDetails);
 
   const showModal = () => {
-    form.setFieldsValue(profile);
+    if (!userProfile) {
+      toast.error("User data not available");
+      return;
+    }
+
+    form.setFieldsValue({
+      name: userProfile?.name || "",
+      email: userProfile?.email || "",
+      phone: userProfile?.contact || "",
+      address: userProfile?.address || "",
+      company: userDetails?.company?.user?.name || "",
+      designation: userDetails?.designation || "",
+    });
+
     if (userProfile?.profile) {
       setFileList([
         {
@@ -210,17 +85,39 @@ const ProfilePage = () => {
         },
       ]);
     }
+
     setIsModalVisible(true);
   };
 
-  const handleOk = () => {
-    form.validateFields().then((values) => {
-      if (fileList.length > 0 && fileList[0].url) {
-        values.profileImage = fileList[0].url;
+  const handleOk = async () => {
+    try {
+      const values = await form.validateFields(); // Validate form before submission
+
+      const formData = new FormData();
+
+      const data = {
+        name: values.name,
+        email: values.email,
+        contact: values.phone,
+        address: values.address,
+        designation: values.designation,
+      };
+
+      formData.append("data", JSON.stringify(data));
+
+      if (fileList.length > 0 && fileList[0].originFileObj) {
+        formData.append("image", fileList[0].originFileObj);
       }
-      // console.log("Updated Profile:", { ...values, image: fileList });
-      setIsModalVisible(false);
-    });
+
+      const res = await updateProfile(formData).unwrap();
+      if (res?.success) {
+        toast.success(res?.message);
+        setIsModalVisible(false);
+      }
+    } catch (error) {
+      console.error(error);
+      toast.error("Profile update failed!");
+    }
   };
 
   const handleCancel = () => {
