@@ -49,8 +49,8 @@ const linkSections = [
     title: "Quick Links",
     links: [
       { label: "FAQ", href: "/faq" },
-      { label: "Privacy Policy", href: "/privacy" },
-      { label: "Terms & Conditions", href: "/terms" },
+      { label: "Privacy Policy", href: "/privacy-policy" },
+      { label: "Terms & Conditions", href: "/terms-and-conditions" },
     ],
   },
 ];

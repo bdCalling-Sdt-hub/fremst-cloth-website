@@ -10,7 +10,6 @@ import {
   Tabs,
   Upload,
   UploadFile,
-  Select,
 } from "antd";
 import Image from "next/image";
 import moment from "moment";
@@ -31,6 +30,9 @@ import profileImg from "../../../assets/randomProfile4.jpg";
 import Heading from "@/components/shared/Heading";
 import toast from "react-hot-toast";
 import { LuUpload } from "react-icons/lu";
+import { useGetUserProfileQuery } from "@/redux/apiSlices/authSlice";
+import { getImageUrl } from "@/utils/getImageUrl";
+import { useOrdersByUserQuery } from "@/redux/apiSlices/orderSlice";
 
 const profile = {
   name: "John Doe",
@@ -186,9 +188,21 @@ const ProfilePage = () => {
     },
   ]);
   const [searchText, setSearchText] = useState("");
-  const [statusFilter, setStatusFilter] = useState("");
 
-  // console.log(fileList);
+  const { data: userProfileData, isLoading } =
+    useGetUserProfileQuery(undefined);
+  const { data: orderData, isLoading: orderLoading } = useOrdersByUserQuery(
+    userProfileData?.data?.user?._id
+  );
+
+  if (isLoading || orderLoading) {
+    return <div>Loading...</div>;
+  }
+
+  const userDetails = userProfileData?.data || [];
+  const userProfile = userProfileData?.data?.user || [];
+  const orders = orderData?.data?.data || [];
+  console.log(orders);
 
   const showModal = () => {
     form.setFieldsValue(profile);
@@ -221,15 +235,8 @@ const ProfilePage = () => {
     setSearchText(e.target.value);
   };
 
-  const handleStatusChange = (value: string) => {
-    setStatusFilter(value);
-  };
-
-  const filteredOrderHistory = profile.orderHistory.filter((order) => {
-    return (
-      order.productName.toLowerCase().includes(searchText.toLowerCase()) &&
-      (statusFilter ? order.status === statusFilter : true)
-    );
+  const filteredOrderHistory = orders?.filter((order: any) => {
+    return order.productName.toLowerCase().includes(searchText.toLowerCase());
   });
 
   const columns = [
@@ -315,14 +322,14 @@ const ProfilePage = () => {
             <div className="w-48 h-48 border-8 rounded-full border-white">
               <Image
                 className="object-cover w-full h-full rounded-full"
-                src={profile.profileImage}
+                src={getImageUrl(userProfile?.profile)}
                 alt="profileImg"
                 width={200}
                 height={200}
               />
             </div>
             <Heading className="text-md flex items-center gap-4">
-              {profile?.name}{" "}
+              {userProfile?.name}{" "}
               <span>
                 <BsFillPatchCheckFill color="#1e88e5" size={30} />
               </span>
@@ -333,31 +340,31 @@ const ProfilePage = () => {
               <span>
                 <PiSuitcaseSimple />
               </span>
-              {profile?.designation}
+              {userDetails?.designation}
             </h1>
             <h1 className="flex items-center gap-2 text-lg">
               <span>
                 <FaRegBuilding />
               </span>
-              {profile?.company}
+              {userDetails?.company || "Unknown"}
             </h1>
             <h1 className="flex items-center gap-2 text-lg">
               <span>
                 <MdOutlineEmail />
               </span>
-              {profile?.email}
+              {userProfile?.email || "Unknown"}
             </h1>
             <h1 className="flex items-center gap-2 text-lg">
               <span>
                 <MdOutlineLocalPhone />
               </span>
-              {profile?.phone}
+              {userProfile?.contact || "Unknown"}
             </h1>
             <h1 className="flex items-center gap-2 text-lg">
               <span>
                 <MdOutlineLocationOn />
               </span>
-              {profile?.address}
+              {userProfile?.address || "Unknown"}
             </h1>
           </div>
         </div>
@@ -495,22 +502,18 @@ const ProfilePage = () => {
           </h1>
           <div className="p-5">
             <h1 className="text-lg">
-              Assigned Budget: <span>${profile?.budgetDetails?.assigned}</span>
+              Assigned Budget: <span>${userDetails?.budget}</span>
             </h1>
             <h1 className="text-lg">
-              Assigned Budget: <span>{profile?.budgetDetails?.duration}</span>
+              Budget Duration : <span>{userDetails?.duration} Months</span>
             </h1>
             <h1 className="text-lg">
-              Assigned Budget:{" "}
-              <span>
-                {moment(profile?.budgetDetails?.assignDate).format("LL")}
-              </span>
+              Assigned Date:{" "}
+              <span>{moment(userDetails?.budgetAssignedAt).format("LL")}</span>
             </h1>
             <h1 className="text-lg">
-              Assigned Budget:{" "}
-              <span>
-                {moment(profile?.budgetDetails?.expirationDate).format("LL")}
-              </span>
+              Expiration Date:{" "}
+              <span>{moment(userDetails?.budgetExpiredAt).format("LL")}</span>
             </h1>
           </div>
         </div>
@@ -523,28 +526,30 @@ const ProfilePage = () => {
               <TbShoppingCartCheck size={40} />
             </div>
             <h1 className="text-lg text-gray-600">Total Order</h1>
-            <h1 className="text-2xl font-bold">{profile?.totalOrder}</h1>
+            <h1 className="text-2xl font-bold">{userDetails?.totalOrders}</h1>
           </div>
           <div className="flex flex-col hover:shadow-xl px-10 rounded-2xl shadow-md py-6 gap-3 items-center">
             <div className="p-6 rounded-2xl bg-[#fff6da]">
               <IoIosCalculator size={40} />
             </div>
             <h1 className="text-lg text-gray-600">Total Budget</h1>
-            <h1 className="text-2xl font-bold">{profile?.totalBudget}</h1>
+            <h1 className="text-2xl font-bold">{userDetails?.totalBudget}</h1>
           </div>
           <div className="flex flex-col hover:shadow-xl px-10 rounded-2xl shadow-md py-6 gap-3 items-center">
             <div className="p-6 rounded-2xl bg-[#edf6fd]">
               <RiMoneyCnyCircleLine size={40} />
             </div>
             <h1 className="text-lg text-gray-600">Total Spend</h1>
-            <h1 className="text-2xl font-bold">{profile?.totalSpend}</h1>
+            <h1 className="text-2xl font-bold">
+              {userDetails?.totalSpentBudget}
+            </h1>
           </div>
           <div className="flex flex-col hover:shadow-xl px-8 rounded-2xl shadow-md py-6 gap-3 items-center">
             <div className="p-6 rounded-2xl bg-[#fce7e7]">
               <GiMoneyStack size={40} />
             </div>
             <h1 className="text-lg text-gray-600">Remaining Budget</h1>
-            <h1 className="text-2xl font-bold">{profile?.remainingBudget}</h1>
+            <h1 className="text-2xl font-bold">{userDetails?.budgetLeft}</h1>
           </div>
         </div>
 
@@ -556,23 +561,13 @@ const ProfilePage = () => {
             onChange={handleSearch}
             style={{ width: "30%" }}
           />
-          <Select
-            placeholder="Filter by status"
-            onChange={handleStatusChange}
-            style={{ width: "20%" }}
-            allowClear
-          >
-            <Select.Option value="Completed">Completed</Select.Option>
-            <Select.Option value="In Progress">In Progress</Select.Option>
-            <Select.Option value="Pending">Pending</Select.Option>
-          </Select>
         </div>
 
         <div className="overflow-x-auto">
           <Table
             columns={columns}
             dataSource={filteredOrderHistory}
-            rowKey={(record) => record._id}
+            rowKey="_id"
             pagination={{ pageSize: 10 }}
           />
         </div>

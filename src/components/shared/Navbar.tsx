@@ -23,10 +23,6 @@ const Navbar = () => {
   const { data: userProfileData, isLoading } =
     useGetUserProfileQuery(undefined);
 
-  //   const pathname = usePathname();
-  const totalCredit = 1000;
-  const remainingCredit = 954;
-
   useEffect(() => {
     const updateTooltipWidth = () => {
       if (window.innerWidth <= 768) {
@@ -47,18 +43,18 @@ const Navbar = () => {
   }
 
   const userProfile = userProfileData?.data?.user || [];
+  const { budget, budgetLeft } = userProfileData?.data || {};
   // console.log(userProfile);
 
   const tooltipContent = (
     <div className="flex items-center justify-between">
       <div className="w-[40px] hidden h-10 bg-primary text-white rounded-full md:flex items-center justify-center font-semibold text-[12px]">
-        954$
+        {budgetLeft}${" "}
       </div>
       <div className="p-2 w-[235px]">
         <p className="font-bold mb-1 text-[12px]">
           Remaining Credit:{" "}
-          <span className="text-red-500"> ${remainingCredit} </span> of $
-          {totalCredit}
+          <span className="text-red-500"> ${budgetLeft} </span> of ${budget}
         </p>
         <p className="text-[12px]">
           You can still purchase items worth up to this amount. Be mindful of
@@ -129,8 +125,8 @@ const Navbar = () => {
                   }}
                   overlayClassName="tooltip-content"
                 >
-                  <div className="border-2 p-1 border-primary w-10 h-10 rounded-full text-gray-600 flex items-center justify-center text-[12px] font-semibold">
-                    {remainingCredit}$
+                  <div className="border-2 p-1 border-primary w-14 h-14 rounded-full text-gray-600 flex items-center justify-center text-[12px] font-semibold">
+                    {budgetLeft}$
                   </div>
                 </Tooltip>
 
