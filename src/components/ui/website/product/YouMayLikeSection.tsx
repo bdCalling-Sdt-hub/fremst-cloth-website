@@ -8,6 +8,7 @@ import { Plus_Jakarta_Sans } from "next/font/google";
 import ProductCard from "@/components/shared/ProductCard";
 import "slick-carousel/slick/slick.css";
 import "slick-carousel/slick/slick-theme.css";
+import { useGetProductByCategoryQuery } from "@/redux/apiSlices/productSlice";
 
 const plusJakarta = Plus_Jakarta_Sans({
   subsets: ["latin"],
@@ -19,58 +20,12 @@ const bigShoulders = Big_Shoulders_Display({
   weight: ["400", "700"],
 });
 
-const products = [
-  {
-    id: 1,
-    title: "Vinterhanske - Aquaguard Thermo",
-    price: 23.9,
-    category: "Lite wear",
-    image: "/cat6.svg",
-    soldOut: false,
-  },
-  {
-    id: 2,
-    title: "Vinterhanske - Aquaguard Thermo",
-    price: 23.9,
-    category: "Lite wear",
-    image: "/cat6.svg",
-    soldOut: true,
-  },
-  {
-    id: 3,
-    title: "Vinterhanske - Aquaguard Thermo",
-    price: 23.9,
-    category: "Lite wear",
-    image: "/cat6.svg",
-    soldOut: false,
-  },
-  {
-    id: 4,
-    title: "Vinterhanske - Aquaguard Thermo",
-    price: 23.9,
-    category: "Lite wear",
-    image: "/cat6.svg",
-    soldOut: true,
-  },
-  {
-    id: 5,
-    title: "Vinterhanske - Aquaguard Thermo",
-    price: 23.9,
-    category: "Lite wear",
-    image: "/cat6.svg",
-    soldOut: false,
-  },
-  {
-    id: 6,
-    title: "Vinterhanske - Aquaguard Thermo",
-    price: 23.9,
-    category: "Lite wear",
-    image: "/cat6.svg",
-    soldOut: true,
-  },
-];
+const YouMayLikeSection = ({ categoryId }: { categoryId: string }) => {
+  console.log(categoryId);
 
-const YouMayLikeSection = () => {
+  const { data: products, isLoading } =
+    useGetProductByCategoryQuery(categoryId);
+
   const [activeIndex, setActiveIndex] = useState(0);
   const CustomNextArrow = ({ onClick }: { onClick?: () => void }) => (
     <div
@@ -82,6 +37,12 @@ const YouMayLikeSection = () => {
       </div>
     </div>
   );
+
+  if (isLoading) return <div>Loading...</div>;
+
+  const productsData = products?.data;
+
+  console.log(productsData);
 
   const CustomPrevArrow = ({ onClick }: { onClick?: () => void }) => (
     <div
@@ -185,8 +146,8 @@ const YouMayLikeSection = () => {
       <div className="w-full ">
         <div className=" lg:w-[1300px] md:w-[600px]">
           <Slider {...settings}>
-            {products.map((product) => (
-              <div key={product.id} className=" ms-5">
+            {productsData?.map((product: any) => (
+              <div key={product._id} className=" ms-5">
                 <ProductCard product={product} />
               </div>
             ))}

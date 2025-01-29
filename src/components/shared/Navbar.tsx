@@ -5,8 +5,7 @@ import Image from "next/image";
 import Link from "next/link";
 import { AiOutlineMenu } from "react-icons/ai";
 import { useEffect, useState } from "react";
-import { Badge, ConfigProvider, Select, Tooltip } from "antd";
-import { TbChevronDown } from "react-icons/tb";
+import { Badge, Tooltip } from "antd";
 import NavItems from "./NavItems";
 import MobileDrawer from "./MobileDrawer";
 import { HiOutlineShoppingBag } from "react-icons/hi";
@@ -69,26 +68,6 @@ const Navbar = () => {
     </div>
   );
 
-  const languageOptions = [
-    { value: "en", label: "English", shortLabel: "EN" },
-    { value: "bn", label: "Bengali", shortLabel: "BN" },
-    { value: "hi", label: "Hindi", shortLabel: "HI" },
-    { value: "es", label: "Spanish", shortLabel: "ES" },
-  ];
-
-  const currency = [
-    { value: "en", label: "Sweden(SEK kr.)" },
-    { value: "bn", label: "Bengali(BDT tk.)" },
-    { value: "hi", label: "Hindi(INR Rs.)" },
-    { value: "es", label: "Spanish(USD $)" },
-  ];
-
-  const customLabel = (option: any) => (
-    <div className="flex items-center gap-2">
-      <span>{option.label}</span>
-    </div>
-  );
-
   const items = [
     { key: "home", label: "Home", path: "/" },
     { key: "products", label: "Products", path: "/products" },
@@ -107,74 +86,6 @@ const Navbar = () => {
             Show more
           </span>
         </p>
-        <div className="ms-5">
-          <ConfigProvider
-            theme={{
-              components: {
-                Select: {
-                  optionSelectedColor: "#ffffff",
-                  optionSelectedBg: "#292C61",
-                  optionActiveBg: "#fdf0e9",
-                  colorText: "#787878",
-                },
-              },
-            }}
-          >
-            <Select
-              defaultValue="en"
-              options={languageOptions}
-              variant={"borderless"}
-              suffixIcon={
-                <div className="ms-2">
-                  <TbChevronDown size={20} color="#787878" />
-                </div>
-              }
-              labelInValue
-              optionLabelProp="label"
-              menuItemSelectedIcon={null}
-              onChange={(value) => console.log(value)}
-              dropdownRender={(menu) => (
-                <div className="text-white">{menu}</div>
-              )}
-              optionRender={(option) => (
-                <div style={{ color: "" }}>{option.label}</div>
-              )}
-              style={{
-                width: "90px",
-                color: "red",
-              }}
-            />
-          </ConfigProvider>
-
-          <ConfigProvider
-            theme={{
-              components: {
-                Select: {
-                  optionSelectedColor: "#ffffff",
-                  optionSelectedBg: "#292C61",
-                  optionActiveBg: "#fdf0e9",
-                  colorText: "#787878",
-                },
-              },
-            }}
-          >
-            <Select
-              defaultValue="en"
-              options={currency}
-              variant={"borderless"}
-              suffixIcon={
-                <div className="ms-2">
-                  <TbChevronDown size={20} color="#787878" />
-                </div>
-              }
-              labelInValue
-              optionLabelProp="label"
-              menuItemSelectedIcon={null}
-              onChange={(value) => console.log(value)}
-              optionRender={customLabel}
-            />
-          </ConfigProvider>
-        </div>
       </div>
       {/* 2nd navbar */}
       <header className={`bg-[#FFFFFF] shadow w-full`}>

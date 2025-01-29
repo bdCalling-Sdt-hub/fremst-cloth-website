@@ -43,7 +43,6 @@ const linkSections = [
     links: [
       { label: "About Us", href: "/about-us" },
       { label: "Contact Us", href: "/contact" },
-      { label: "Training", href: "/training" },
     ],
   },
   {
@@ -52,7 +51,6 @@ const linkSections = [
       { label: "FAQ", href: "/faq" },
       { label: "Privacy Policy", href: "/privacy" },
       { label: "Terms & Conditions", href: "/terms" },
-      { label: "Refund Policy", href: "/refund" },
     ],
   },
 ];

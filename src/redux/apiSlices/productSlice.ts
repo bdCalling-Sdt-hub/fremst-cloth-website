@@ -24,10 +24,8 @@ const productServiceApi = api.injectEndpoints({
       }) => {
         const params = new URLSearchParams();
 
-        // Append multiple category IDs
         category.forEach((id) => params.append("category", id));
 
-        // Append price range filters
         if (minPrice !== undefined)
           params.append("minPrice", minPrice.toString());
         if (maxPrice !== undefined)
@@ -38,6 +36,21 @@ const productServiceApi = api.injectEndpoints({
           method: "GET",
         };
       },
+      providesTags: ["product"],
+    }),
+    getSingleProduct: builder.query({
+      query: (id: string) => ({
+        url: `/product/${id}`,
+        method: "GET",
+      }),
+      providesTags: ["product"],
+    }),
+
+    getProductByCategory: builder.query({
+      query: (id: string) => ({
+        url: `/product?category=${id}`,
+        method: "GET",
+      }),
       providesTags: ["product"],
     }),
 
@@ -64,4 +77,6 @@ export const {
   useGetAllProductsQuery,
   useGetTopProductsQuery,
   useGetWinterCollectionQuery,
+  useGetSingleProductQuery,
+  useGetProductByCategoryQuery,
 } = productServiceApi;

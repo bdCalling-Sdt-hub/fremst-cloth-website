@@ -2,13 +2,16 @@
 
 import { Mail } from "lucide-react";
 import React from "react";
-import { Form, Input } from "antd";
+import { Form, Button } from "antd";
 import TextInput from "@/components/shared/TextInput";
 import { GiRotaryPhone } from "react-icons/gi";
 import { FaMapLocationDot } from "react-icons/fa6";
 import { Big_Shoulders_Display } from "next/font/google";
 import { Plus_Jakarta_Sans } from "next/font/google";
 import Heading from "@/components/shared/Heading";
+import { useContactUsMutation } from "@/redux/apiSlices/contactUsSlice";
+import toast from "react-hot-toast";
+import TextArea from "antd/es/input/TextArea";
 
 const plusJakarta = Plus_Jakarta_Sans({
   subsets: ["latin"],
@@ -21,6 +24,8 @@ const bigShoulders = Big_Shoulders_Display({
 });
 
 const Contact = () => {
+  const [contactUs, { isLoading }] = useContactUsMutation();
+
   const contactDetails = [
     {
       title: "Phone Number",
@@ -92,6 +97,21 @@ const Contact = () => {
     </div>
   );
 
+  const handleContactUs = async (values: any) => {
+    const { name, email, message } = values;
+    console.log(values);
+    try {
+      const res = await contactUs({ name, email, message }).unwrap();
+      if (res?.success) {
+        toast.success("Message sent successfully!");
+      }
+    } catch (error: any) {
+      toast.error(
+        error?.data?.message || "Something went wrong. Please try again later."
+      );
+    }
+  };
+
   return (
     <div>
       <div className=" ">
@@ -119,11 +139,16 @@ const Contact = () => {
               we’ll get back to you as soon as possible.
             </p>
 
-            <Form className="space-y-4" layout="vertical">
+            <Form
+              onFinish={handleContactUs}
+              className="space-y-4"
+              layout="vertical"
+            >
               <TextInput name="name" label="Full name" />
               <TextInput name="email" label="Email" />
 
               <Form.Item
+                name="message"
                 label={<p className="text-white text-[16px]">Message</p>}
                 rules={[
                   {
@@ -132,7 +157,7 @@ const Contact = () => {
                   },
                 ]}
               >
-                <Input.TextArea
+                <TextArea
                   placeholder="Your message"
                   name="message"
                   rows={5}
@@ -145,17 +170,18 @@ const Contact = () => {
                     borderRadius: "4px",
                     padding: "8px",
                   }}
-                  className="w-full px-4 py-2 border border-gray-200 rounded-md focus:outline-none focus:ring-2 focus:ring-[#FF4D4F] focus:border-transparent resize-none"
                 />
               </Form.Item>
 
               <div className="flex w-full justify-end mt-4">
-                <button
-                  type="submit"
-                  className="px-6 py-3 w-full bg-[#F5F5F5] font-bold rounded-lg text-lg transition-colors duration-200"
+                <Button
+                  type="primary"
+                  htmlType="submit"
+                  loading={isLoading}
+                  className="px-6 py-3 w-full font-bold rounded-lg text-lg transition-colors duration-200"
                 >
                   Submit your message
-                </button>
+                </Button>
               </div>
             </Form>
           </div>

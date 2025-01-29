@@ -4,14 +4,7 @@ import { useState, useEffect } from "react";
 import debounce from "lodash/debounce"; // Install lodash if not installed
 import Heading from "@/components/shared/Heading";
 import ProductCard from "@/components/shared/ProductCard";
-import {
-  Slider,
-  Pagination,
-  Select,
-  Checkbox,
-  Spin,
-  ConfigProvider,
-} from "antd";
+import { Slider, Pagination, Checkbox, Spin, ConfigProvider } from "antd";
 import { Big_Shoulders_Display } from "next/font/google";
 import {
   useGetAllProductsQuery,
@@ -24,8 +17,6 @@ const bigShoulders = Big_Shoulders_Display({
 });
 
 const ShopPage = () => {
-  const [currentPage, setCurrentPage] = useState(1);
-  const [pageSize, setPageSize] = useState(12);
   const [checkedCategories, setCheckedCategories] = useState<string[]>([]);
   const [priceRange, setPriceRange] = useState<[number, number]>([0, 3000000]);
   const [debouncedPriceRange, setDebouncedPriceRange] = useState(priceRange);
@@ -74,12 +65,11 @@ const ShopPage = () => {
 
   return (
     <div className="container">
-      <h1 className="my-5">
-        <h1>Shop</h1>
+      <h1 className={`my-5 text-3xl font-bold ${bigShoulders.className}`}>
+        Shop
       </h1>
       <h1 className="my-5">
-        Showing <span className="font-bold">1-{pageSize} items</span> out of
-        <span className="font-bold"> {products.length} results</span>
+        Total Items: <span className="font-bold"> {products.length}</span>
       </h1>
       <div className="md:flex justify-center gap-10">
         {/* Sidebar - Filters */}
@@ -125,20 +115,6 @@ const ShopPage = () => {
 
         {/* Product List */}
         <div className="md:w-[70%] mb-20">
-          <div className="flex justify-end mb-5">
-            <Select
-              placeholder="Select a category"
-              style={{ width: 200 }}
-              allowClear
-            >
-              {categories.map((item: any) => (
-                <Select.Option key={item._id} value={item._id}>
-                  {item.title}
-                </Select.Option>
-              ))}
-            </Select>
-          </div>
-
           {/* Product Cards (Show previous data while fetching new ones) */}
           {isFetching && products.length === 0 ? (
             <div className="flex items-center justify-center mt-10">
@@ -146,23 +122,15 @@ const ShopPage = () => {
             </div>
           ) : (
             <div className="grid md:grid-cols-3 gap-10 grid-cols-1">
-              {products.map((product: any) => (
-                <ProductCard product={product} key={product.id} />
+              {products?.map((product: any) => (
+                <ProductCard product={product} key={product._id} />
               ))}
             </div>
           )}
 
           {/* Pagination */}
           <div className="flex justify-center mt-10">
-            <Pagination
-              current={currentPage}
-              pageSize={pageSize}
-              total={products.length}
-              onChange={(page, size) => {
-                setCurrentPage(page);
-                setPageSize(size || 12);
-              }}
-            />
+            <Pagination pageSize={12} />
           </div>
         </div>
       </div>

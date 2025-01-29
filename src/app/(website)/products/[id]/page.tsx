@@ -1,11 +1,6 @@
 "use client";
 
-import { FaStar } from "react-icons/fa";
-import productImg1 from "@/assets/product1.1.png";
-import productImg2 from "@/assets/product1.2.png";
-import productImg3 from "@/assets/product1.3.png";
-import productImg4 from "@/assets/product1.4.png";
-import { useState } from "react";
+import { useEffect, useState } from "react";
 import { ConfigProvider, Tabs } from "antd";
 
 import Link from "next/link";
@@ -14,97 +9,55 @@ import Image from "next/image";
 import { FiCheckSquare } from "react-icons/fi";
 import Heading from "@/components/shared/Heading";
 import YouMayLikeSection from "@/components/ui/website/product/YouMayLikeSection";
-
-interface Review {
-  name: string;
-  rating: number;
-  comment: string;
-}
-
-interface ProductData {
-  title: string;
-  reviews: Review[];
-  price: number;
-  shortDescription: string;
-  availability: string;
-  tags: string;
-  category: string;
-}
-
-const productData: ProductData = {
-  title: "Functional Shirt - Pesso Nordic",
-  reviews: [
-    {
-      name: "John Doe",
-      rating: 5,
-      comment: "This product is amazing. I love it!",
-    },
-    {
-      name: "Jane Smith",
-      rating: 4,
-      comment: "I really dislike this product. It's not what I expected.",
-    },
-  ],
-  price: 25,
-  shortDescription:
-    "Breathable, durable, and designed for maximum comfort and safety in demanding work environments. Made with moisture-wicking fabric to keep you dry and visible throughout the day. Perfect for professional use in low-light and high-activity conditions.",
-  availability: "available",
-  tags: "Shirt",
-  category: "Shirt",
-};
-
-// interface RelatedProduct {
-//   id: number;
-//   image: string;
-//   label: string;
-//   title: string;
-//   description: string;
-//   price: string;
-// }
+import { useParams } from "next/navigation";
+import { useGetSingleProductQuery } from "@/redux/apiSlices/productSlice";
+import { FaCheckCircle } from "react-icons/fa";
+import { getImageUrl } from "@/utils/getImageUrl";
 
 const ProductDetailsPage: React.FC = () => {
-  const [mainImage, setMainImage] = useState<typeof productImg1>(productImg1);
+  const [mainImage, setMainImage] = useState("");
   const [selectedSize, setSelectedSize] = useState("");
   const [quantity, setQuantity] = useState<number>(1);
+  const [selectedColors, setSelectedColors] = useState("");
 
-  const totalPrice = productData?.price * quantity;
+  console.log(mainImage);
 
-  const description = (
-    <div className="space-y-5">
-      <div>
-        <h1 className="text-lg font-bold">Functional Shirt - Pesso Nordic</h1>
-        <p>
-          Comfortable high-visibility t-shirt with excellent breathability and
-          visibility. The &quot;Quick-dry&quot; fabric keeps the body cool on
-          warm days
-        </p>
+  const { id } = useParams();
+
+  const { data: product, isFetching } = useGetSingleProductQuery(id as string);
+
+  useEffect(() => {
+    if (product) {
+      setMainImage(product?.data?.image);
+    }
+  }, [product]);
+
+  if (isFetching) {
+    return (
+      <div className="flex justify-center items-center min-h-screen">
+        <div className="animate-spin rounded-full h-16 w-16 border-t-4 border-blue-500"></div>
       </div>
-      <div>
-        <h1 className="text-lg font-bold">Material</h1>
-        <p>50% Cotton, 50% Polyester</p>
-      </div>
-      <div>
-        <h1 className="text-lg font-bold">Standard</h1>
-        <p>EN ISO 20471 Class 2</p>
-      </div>
-    </div>
-  );
+    );
+  }
+
+  const singleProduct = product?.data;
+  console.log(singleProduct);
+
+  const totalPrice =
+    (singleProduct?.salePrice
+      ? singleProduct?.salePrice
+      : singleProduct?.price) * quantity;
 
   const items = [
     {
       key: "1",
       label: <p className="md:text-xl ">Description</p>,
-      children: description,
+      children: singleProduct?.description,
     },
     {
       key: "2",
       label: <p className="md:text-xl">Additional Information</p>,
-      children: "Content of Tab Pane 2",
-    },
-    {
-      key: "3",
-      label: <p className="md:text-xl">Reviews</p>,
-      children: "Content of Tab Pane 3",
+      children: singleProduct?.additionalInfo,
     },
   ];
 
@@ -115,51 +68,64 @@ const ProductDetailsPage: React.FC = () => {
           <div className="md:w-[45%] flex flex-col items-center">
             <div className="w-full mb-5">
               <Image
-                className="md:w-[600px] w-[350px] h-[300px] md:h-[440px]"
-                src={mainImage}
+                className="md:w-[600px] w-[350px] object-cover h-[300px] md:h-[440px]"
+                src={getImageUrl(mainImage)}
                 alt="Main Image"
                 width={100}
                 height={100}
               />
             </div>
             <div className="grid grid-cols-4 gap-2">
-              {[productImg1, productImg2, productImg3, productImg4].map(
-                (img, index) => (
+              {singleProduct?.featuredImages
+                ?.slice(0, 4)
+                ?.map((img: string, index: number) => (
                   <Image
                     key={index}
-                    src={img}
+                    src={getImageUrl(img)}
                     alt={`Thumbnail ${index + 1}`}
-                    className="cursor-pointer md:h-28 md:w-28 h-20 w-20 transition-transform transform hover:scale-110"
+                    className="cursor-pointer object-cover md:h-28 md:w-28 h-20 w-20 border border-gray-300 rounded-lg transition-transform transform hover:scale-110"
                     onClick={() => setMainImage(img)}
                     width={100}
                     height={100}
                   />
-                )
-              )}
+                ))}
             </div>
           </div>
           <div className="md:space-y-3 md:w-[55%] mt-7 md:mt-0">
             {/* <h1 className="md:text-3xl text-2xl">{productData.title}</h1> */}
-            <Heading className="">{productData.title}</Heading>
-            <div className="flex items-center gap-2">
-              <div className="flex gap-1">
-                {Array(5)
-                  .fill(0)
-                  .map((_, i) => (
-                    <FaStar key={i} className="text-orange-600" />
-                  ))}
-              </div>
-              <p>{productData.reviews.length} Reviews</p>
+            <Heading className="">{singleProduct?.name}</Heading>
+
+            <div className=" relative flex gap-3 text-primary">
+              {singleProduct?.salePrice ? (
+                <div>
+                  <p className="line-through text-gray-500">
+                    ${singleProduct?.price}
+                  </p>
+                  <p className="absolute font-bold top-4 left-0 text-2xl ">
+                    ${singleProduct?.salePrice}
+                  </p>
+                </div>
+              ) : (
+                <p className="absolute font-bold top-4 left-0 text-2xl ">
+                  ${singleProduct?.price}
+                </p>
+              )}
             </div>
-            <div className="flex gap-3 text-3xl font-bold text-primary">
-              <p>${productData?.price}</p>
-            </div>
-            <p className="leading-5">{productData.shortDescription}</p>
+            <h1 className="flex gap-2 pt-5 items-center">
+              <span className="font-bold">Availability:</span>
+              {singleProduct?.availability === true ? (
+                <span className="text-green-600 flex gap-1">
+                  In Stock <FiCheckSquare />
+                </span>
+              ) : (
+                <span className="text-red-500">Out Of Stock</span>
+              )}
+            </h1>
             <div className="flex items-center gap-10 mt-10 md:mt-0">
               <h1 className="font-bold text-2xl">Size:</h1>
               <div>
                 <div className="flex flex-wrap gap-2">
-                  {["S", "M", "L", "XL", "2XL", "3XL"].map((size) => (
+                  {singleProduct?.sizes.map((size: string) => (
                     <button
                       key={size}
                       onClick={() => setSelectedSize(size)}
@@ -175,9 +141,36 @@ const ProductDetailsPage: React.FC = () => {
                 </div>
               </div>
             </div>
-            <div className="flex gap-5 mt-5 md:mt-0 items-center">
-              <h1 className="font-bold text-2xl">Color:</h1>
-              <div className="w-20 border rounded-xl h-10 bg-[#e9fc52]"></div>
+            <div className="flex gap-3 mt-5 md:mt-0 items-center">
+              <h1 className="font-bold text-2xl me-3">Color:</h1>
+              <div className="flex gap-2">
+                {singleProduct?.colors?.map((color: string) => (
+                  <label key={color} className="cursor-pointer relative">
+                    <input
+                      type="radio"
+                      name="color"
+                      value={color}
+                      className="hidden"
+                      onChange={() => setSelectedColors(color)}
+                    />
+                    <div
+                      className={`w-10 h-10 rounded-xl border-2 flex items-center justify-center ${
+                        selectedColors === color
+                          ? "border-black"
+                          : "border-gray-300"
+                      }`}
+                      style={{ backgroundColor: color.toLowerCase() }}
+                    >
+                      {selectedColors === color && (
+                        <FaCheckCircle
+                          size={30}
+                          className={`absolute text-white bg-primary rounded-full p-1`}
+                        />
+                      )}
+                    </div>
+                  </label>
+                ))}
+              </div>
             </div>
             <div className="flex items-center gap-4 ">
               <div className="flex border font-semibold p-2 rounded-2xl border-gray-300 items-center gap-3">
@@ -216,22 +209,21 @@ const ProductDetailsPage: React.FC = () => {
                 </button>
               </Link>
             </div>
-            <h1 className="flex gap-2 items-center">
-              <span className="font-bold">Available:</span>
-              {productData?.availability === "available" ? (
-                <span className="text-green-600 flex gap-1">
-                  In Stock <FiCheckSquare />
+
+            <div className="py-3">
+              <span className="font-bold">Tags: </span>
+              {singleProduct?.tags?.map((tag: string, index: number) => (
+                <span
+                  key={index}
+                  className="mr-2 bg-gray-200 px-2 py-1 rounded"
+                >
+                  {tag}
                 </span>
-              ) : (
-                <span className="text-red-500">Out Of Stock</span>
-              )}
-            </h1>
-            <h1>
-              <span className="font-bold">Tags: </span> {productData?.tags}
-            </h1>
+              ))}
+            </div>
             <h1>
               <span className="font-bold">Category:</span>{" "}
-              {productData?.category}
+              {singleProduct?.category?.title}
             </h1>
           </div>
         </div>
@@ -239,7 +231,7 @@ const ProductDetailsPage: React.FC = () => {
           <Tabs defaultActiveKey="1" items={items} />
         </ConfigProvider>
       </div>
-      <YouMayLikeSection />
+      <YouMayLikeSection categoryId={singleProduct?.category?._id} />
     </>
   );
 };
