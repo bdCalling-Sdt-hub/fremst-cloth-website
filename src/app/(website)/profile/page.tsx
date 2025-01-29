@@ -10,12 +10,13 @@ import {
   Tabs,
   Upload,
   UploadFile,
+  Tooltip,
 } from "antd";
 import Image from "next/image";
 import moment from "moment";
 import { BsFillPatchCheckFill } from "react-icons/bs";
 import { PiSuitcaseSimple } from "react-icons/pi";
-import { FaEye, FaRegBuilding } from "react-icons/fa";
+import { FaRegBuilding } from "react-icons/fa";
 import {
   MdOutlineEmail,
   MdOutlineLocalPhone,
@@ -179,20 +180,13 @@ const profile = {
 const ProfilePage = () => {
   const [isModalVisible, setIsModalVisible] = useState(false);
   const [form] = Form.useForm();
-  const [fileList, setFileList] = useState<UploadFile[]>([
-    {
-      uid: "-1",
-      name: "profile.png",
-      status: "done",
-      url: profile.profileImage,
-    },
-  ]);
+  const [fileList, setFileList] = useState<UploadFile[]>([]);
   const [searchText, setSearchText] = useState("");
 
   const { data: userProfileData, isLoading } =
     useGetUserProfileQuery(undefined);
   const { data: orderData, isLoading: orderLoading } = useOrdersByUserQuery(
-    userProfileData?.data?.user?._id
+    userProfileData?.data?._id
   );
 
   if (isLoading || orderLoading) {
@@ -202,10 +196,20 @@ const ProfilePage = () => {
   const userDetails = userProfileData?.data || [];
   const userProfile = userProfileData?.data?.user || [];
   const orders = orderData?.data?.data || [];
-  console.log(orders);
+  // console.log(orders);
 
   const showModal = () => {
     form.setFieldsValue(profile);
+    if (userProfile?.profile) {
+      setFileList([
+        {
+          uid: "-1",
+          name: "profile.png",
+          status: "done",
+          url: getImageUrl(userProfile?.profile),
+        },
+      ]);
+    }
     setIsModalVisible(true);
   };
 
@@ -235,30 +239,39 @@ const ProfilePage = () => {
     setSearchText(e.target.value);
   };
 
-  const filteredOrderHistory = orders?.filter((order: any) => {
-    return order.productName.toLowerCase().includes(searchText.toLowerCase());
-  });
+  // const filteredOrderHistory = profile?.orderHistory?.filter((order: any) => {
+  //   return order.productName.toLowerCase().includes(searchText.toLowerCase());
+  // });
 
   const columns = [
     {
       title: "Id",
       dataIndex: "_id",
       key: "_id",
+      render: (text: string) => (
+        <Tooltip title={text}>
+          <span>{text?.slice(0, 10)}</span>
+        </Tooltip>
+      ),
     },
     {
       title: "Product Name",
-      dataIndex: "productName",
-      key: "productName",
+      dataIndex: "items",
+      key: "items",
+      render: (_: any, record: any) => (
+        <span>{record?.items[0]?.product?.name}</span>
+      ),
     },
     {
       title: "Item",
-      dataIndex: "item",
-      key: "item",
+      dataIndex: "items",
+      key: "items",
+      render: (items: any) => <span>{items?.length}</span>,
     },
     {
       title: "Price",
-      dataIndex: "price",
-      key: "price",
+      dataIndex: "totalAmount",
+      key: "totalAmount",
     },
     {
       title: "Status",
@@ -267,9 +280,9 @@ const ProfilePage = () => {
       render: (text: string) => (
         <span
           className={
-            text === "Completed"
+            text === "completed"
               ? "text-green-500"
-              : text === "In Progress"
+              : text === "dispatched"
               ? "text-blue-500"
               : "text-red-500"
           }
@@ -283,11 +296,6 @@ const ProfilePage = () => {
       dataIndex: "date",
       key: "date",
       render: (date: string) => <span>{moment(date).format("L")}</span>,
-    },
-    {
-      title: "Action",
-      key: "action",
-      render: () => <FaEye size={20} color="#292C61" />,
     },
   ];
 
@@ -346,7 +354,7 @@ const ProfilePage = () => {
               <span>
                 <FaRegBuilding />
               </span>
-              {userDetails?.company || "Unknown"}
+              {userDetails?.company?.user?.name || "Unknown"}
             </h1>
             <h1 className="flex items-center gap-2 text-lg">
               <span>
@@ -541,7 +549,7 @@ const ProfilePage = () => {
             </div>
             <h1 className="text-lg text-gray-600">Total Spend</h1>
             <h1 className="text-2xl font-bold">
-              {userDetails?.totalSpentBudget}
+              {userDetails?.totalSpentBudget?.toFixed(2)}
             </h1>
           </div>
           <div className="flex flex-col hover:shadow-xl px-8 rounded-2xl shadow-md py-6 gap-3 items-center">
@@ -549,7 +557,9 @@ const ProfilePage = () => {
               <GiMoneyStack size={40} />
             </div>
             <h1 className="text-lg text-gray-600">Remaining Budget</h1>
-            <h1 className="text-2xl font-bold">{userDetails?.budgetLeft}</h1>
+            <h1 className="text-2xl font-bold">
+              {userDetails?.budgetLeft?.toFixed(2)}
+            </h1>
           </div>
         </div>
 
@@ -566,7 +576,7 @@ const ProfilePage = () => {
         <div className="overflow-x-auto">
           <Table
             columns={columns}
-            dataSource={filteredOrderHistory}
+            dataSource={orders}
             rowKey="_id"
             pagination={{ pageSize: 10 }}
           />
