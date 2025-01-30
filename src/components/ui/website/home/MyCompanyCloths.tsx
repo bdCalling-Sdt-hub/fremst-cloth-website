@@ -23,8 +23,11 @@ const bigShoulders = Big_Shoulders_Display({
 const MyCompanyCloths = () => {
   const [activeIndex, setActiveIndex] = useState(0);
 
-  const { data: getAllProducts, isFetching } =
-    useGetAllProductsQuery(undefined);
+  const { data: getAllProducts, isFetching } = useGetAllProductsQuery({
+    category: [],
+    minPrice: 0,
+    maxPrice: 1000,
+  });
 
   if (isFetching) {
     return (

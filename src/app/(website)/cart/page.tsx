@@ -145,14 +145,17 @@ const CartPage = () => {
   ];
 
   const handleUpdateCart = async () => {
-    const getCart = localStorage.getItem("cart");
-    if (getCart) {
-      localStorage.removeItem("cart");
-    }
+    if (typeof window !== "undefined") {
+      // Now it's safe to use localStorage
+      const getCart = localStorage.getItem("cart");
+      if (getCart) {
+        localStorage.removeItem("cart");
+      }
 
-    localStorage.setItem("cart", JSON.stringify(cart));
-    toast.success("Cart updated successfully!");
-    router.push("/checkout");
+      localStorage.setItem("cart", JSON.stringify(cart));
+      toast.success("Cart updated successfully!");
+      router.push("/checkout");
+    }
   };
 
   return (

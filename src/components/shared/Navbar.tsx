@@ -19,12 +19,16 @@ const plusJakarta = Plus_Jakarta_Sans({
 
 const Navbar = () => {
   const [showDrawer, setShowDrawer] = useState(false);
+  const [count, setCount] = useState(0);
   const [tooltipWidth, setTooltipWidth] = useState("290px");
   const { data: userProfileData, isLoading } =
     useGetUserProfileQuery(undefined);
 
-  const cartCount = localStorage.getItem("cart") || "0";
-  const count = JSON.parse(cartCount)?.length;
+  useEffect(() => {
+    const cartCount = localStorage.getItem("cart") || "0";
+    const count = JSON.parse(cartCount)?.length;
+    setCount(count);
+  }, []);
 
   console.log(count);
 

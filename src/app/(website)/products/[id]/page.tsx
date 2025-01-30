@@ -19,6 +19,7 @@ const ProductDetailsPage: React.FC = () => {
   const [selectedSize, setSelectedSize] = useState("");
   const [quantity, setQuantity] = useState<number>(1);
   const [selectedColors, setSelectedColors] = useState("");
+  const [localCart, setLocalCart] = useState([]);
 
   // console.log(mainImage);
 
@@ -31,6 +32,13 @@ const ProductDetailsPage: React.FC = () => {
       setMainImage(product?.data?.image);
     }
   }, [product]);
+
+  useEffect(() => {
+    const localCart = localStorage.getItem("cart");
+    if (localCart) {
+      setLocalCart(JSON.parse(localCart));
+    }
+  }, []);
 
   if (isFetching) {
     return (
@@ -62,7 +70,6 @@ const ProductDetailsPage: React.FC = () => {
   ];
 
   const handleAddToCart = async () => {
-    const localCart = localStorage.getItem("cart");
     const data = {
       product: {
         id: singleProduct?._id,
@@ -76,8 +83,7 @@ const ProductDetailsPage: React.FC = () => {
       size: selectedSize,
     };
     if (localCart) {
-      const cart = JSON.parse(localCart);
-      localStorage.setItem("cart", JSON.stringify([...cart, data]));
+      localStorage.setItem("cart", JSON.stringify([...localCart, data]));
     } else {
       localStorage.setItem("cart", JSON.stringify([data]));
     }
