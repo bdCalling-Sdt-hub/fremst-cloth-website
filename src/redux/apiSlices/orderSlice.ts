@@ -15,7 +15,7 @@ const orderApi = api.injectEndpoints({
         method: "POST",
         body: data,
       }),
-      invalidatesTags: ["order"],
+      invalidatesTags: ["order", "userProfile"],
     }),
   }),
 });

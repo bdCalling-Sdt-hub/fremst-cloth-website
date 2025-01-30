@@ -1,20 +1,44 @@
 "use client";
 
 import { Form, Input, Button, Modal, Radio } from "antd";
-import { useState } from "react";
+import { useEffect, useState } from "react";
 import Image from "next/image";
 
 import { FaCheckCircle } from "react-icons/fa";
 import Link from "next/link";
 import Heading from "@/components/shared/Heading";
-import { useGetCartItemsQuery } from "@/redux/apiSlices/cartSlice";
+
 import { getImageUrl } from "@/utils/getImageUrl";
+import { useCreateOrderMutation } from "@/redux/apiSlices/orderSlice";
+import toast from "react-hot-toast";
+import { useGetUserProfileQuery } from "@/redux/apiSlices/authSlice";
+
+interface CartItem {
+  key: string;
+  product: {
+    id: string;
+    image: string;
+    name: string;
+    price: number;
+    salePrice?: number;
+  };
+  quantity: number;
+}
 
 const CheckoutPage = () => {
   const [isModalVisible, setIsModalVisible] = useState(false);
   const [deliveryOption, setDeliveryOption] = useState("default");
+  const [cart, setCart] = useState<CartItem[]>([]);
 
-  const { data: cartItems, isFetching } = useGetCartItemsQuery(undefined);
+  const { data: userData, isFetching } = useGetUserProfileQuery(undefined);
+  const [placeOrder] = useCreateOrderMutation();
+
+  useEffect(() => {
+    const cartItems = localStorage.getItem("cart");
+    if (cartItems) {
+      setCart(JSON.parse(cartItems));
+    }
+  }, []);
 
   if (isFetching) {
     return (
@@ -24,18 +48,40 @@ const CheckoutPage = () => {
     );
   }
 
-  const cartItemsList = cartItems?.data?.products;
-  console.log(cartItemsList);
+  const userDetails = userData?.data?.user;
 
-  const totalPrice = cartItems?.data?.products?.reduce(
+  const { address } = userDetails;
+
+  const totalPrice = cart?.reduce(
     (total: number, item: any) =>
       total + (item.product.salePrice || item.product.price) * item.quantity,
     0
   );
 
-  const onFinish = (values: Record<string, unknown>) => {
-    console.log("Form Values:", values);
-    setIsModalVisible(true);
+  const onFinish = async (values: Record<string, unknown>) => {
+    const data = {
+      items: cart?.map((item: any) => ({
+        product: item.product.id,
+        quantity: item.quantity,
+        size: item.size,
+        color: item.color,
+      })),
+      address: values.address,
+      additionalInfo: values.orderNotes,
+    };
+
+    try {
+      const res = await placeOrder(data).unwrap();
+      if (res?.success) {
+        toast.success(res?.message);
+        setIsModalVisible(true);
+        localStorage.removeItem("cart");
+      }
+    } catch (error: any) {
+      toast.error(
+        error?.data?.message || "Something went wrong. Please try again later."
+      );
+    }
   };
 
   const handleOk = () => {
@@ -70,11 +116,19 @@ const CheckoutPage = () => {
                 value={deliveryOption}
                 className="flex flex-col"
               >
-                <Radio value="default" className="text-lg">
+                <Radio
+                  value="default"
+                  className="text-lg"
+                  onChange={(e) => setDeliveryOption(e.target.value)}
+                >
                   Use my default address
                 </Radio>{" "}
                 <br />
-                <Radio value="different" className="text-lg">
+                <Radio
+                  value="different"
+                  className="text-lg"
+                  onChange={(e) => setDeliveryOption(e.target.value)}
+                >
                   Ship to a different address
                 </Radio>
               </Radio.Group>
@@ -85,7 +139,11 @@ const CheckoutPage = () => {
               name="address"
               rules={[{ required: true }]}
             >
-              <Input className="py-2" placeholder="Address" />
+              <Input
+                className="py-2"
+                placeholder="Address"
+                defaultValue={deliveryOption === "default" ? address : ""}
+              />
             </Form.Item>
 
             <Heading className="">Additional Info</Heading>
@@ -99,7 +157,7 @@ const CheckoutPage = () => {
               <Heading className="mx-5">Order Summary</Heading>
               <div className="w-full p-5 border-none">
                 <ul>
-                  {cartItemsList?.map((item: any) => (
+                  {cart?.map((item: any) => (
                     <li
                       key={item.key}
                       className="flex items-center border-t justify-between py-2"

@@ -23,6 +23,11 @@ const Navbar = () => {
   const { data: userProfileData, isLoading } =
     useGetUserProfileQuery(undefined);
 
+  const cartCount = localStorage.getItem("cart") || "0";
+  const count = JSON.parse(cartCount)?.length;
+
+  console.log(count);
+
   useEffect(() => {
     const updateTooltipWidth = () => {
       if (window.innerWidth <= 768) {
@@ -108,7 +113,7 @@ const Navbar = () => {
             {userProfile?.role ? (
               <div className="flex items-center space-x-4">
                 <div className="hidden md:block">
-                  <Badge count="4">
+                  <Badge count={count ? (count === 0 ? "" : count) : ""}>
                     <Link href={"/cart"} className="hidden md:flex">
                       <HiOutlineShoppingBag size={34} color="#292C61" />
                     </Link>

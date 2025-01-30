@@ -13,7 +13,6 @@ import { useParams } from "next/navigation";
 import { useGetSingleProductQuery } from "@/redux/apiSlices/productSlice";
 import { FaCheckCircle } from "react-icons/fa";
 import { getImageUrl } from "@/utils/getImageUrl";
-import { useCreateCartMutation } from "@/redux/apiSlices/cartSlice";
 
 const ProductDetailsPage: React.FC = () => {
   const [mainImage, setMainImage] = useState("");
@@ -26,7 +25,6 @@ const ProductDetailsPage: React.FC = () => {
   const { id } = useParams();
 
   const { data: product, isFetching } = useGetSingleProductQuery(id as string);
-  const [addToCart] = useCreateCartMutation();
 
   useEffect(() => {
     if (product) {
@@ -64,28 +62,26 @@ const ProductDetailsPage: React.FC = () => {
   ];
 
   const handleAddToCart = async () => {
+    const localCart = localStorage.getItem("cart");
     const data = {
-      product: id,
+      product: {
+        id: singleProduct?._id,
+        name: singleProduct?.name,
+        image: singleProduct?.image,
+        price: singleProduct?.price,
+        salePrice: singleProduct?.salePrice,
+      },
       quantity: quantity,
       color: selectedColors,
       size: selectedSize,
     };
-    try {
-      const response = await addToCart(data).unwrap();
-      console.log(response);
-      if (response?.success) {
-        toast.success(
-          response?.message || "Product added to cart successfully!"
-        );
-      } else {
-        toast.error(
-          response?.message || "Something went wrong. Please try again later."
-        );
-      }
-    } catch (error) {
-      console.log(error);
-      toast.error("Something went wrong. Please try again later.");
+    if (localCart) {
+      const cart = JSON.parse(localCart);
+      localStorage.setItem("cart", JSON.stringify([...cart, data]));
+    } else {
+      localStorage.setItem("cart", JSON.stringify([data]));
     }
+    toast.success("Product added to cart successfully!");
   };
 
   return (

@@ -2,15 +2,18 @@
 
 import { Table } from "antd";
 import { useState, useEffect } from "react";
-import Link from "next/link";
+
 import Heading from "@/components/shared/Heading";
 import Image from "next/image";
-import { useGetCartItemsQuery } from "@/redux/apiSlices/cartSlice";
+
 import { getImageUrl } from "@/utils/getImageUrl";
+import toast from "react-hot-toast";
+import { useRouter } from "next/navigation";
 
 interface CartItem {
   key: string;
   product: {
+    id: string;
     image: string;
     name: string;
     price: number;
@@ -20,34 +23,44 @@ interface CartItem {
 }
 
 const CartPage = () => {
-  const { data: cartItems, isFetching } = useGetCartItemsQuery(undefined);
   const [cart, setCart] = useState<CartItem[]>([]);
+  const router = useRouter();
 
   console.log(cart);
 
   useEffect(() => {
-    if (cartItems?.data?.products) {
-      setCart(cartItems.data.products);
+    const cartItems = localStorage.getItem("cart");
+    if (cartItems) {
+      setCart(JSON.parse(cartItems));
     }
-  }, [cartItems]);
+  }, []); // Runs only once on mount
 
-  // Update quantity
-  const updateQuantity = (key: string, newQuantity: number) => {
-    setCart((prevCart) =>
-      prevCart.map((item) =>
-        item.key === key ? { ...item, quantity: newQuantity } : item
-      )
-    );
+  // Update quantity and sync with localStorage
+  const updateQuantity = (productId: string, newQuantity: number) => {
+    setCart((prevCart) => {
+      const updatedCart = prevCart.map((item) =>
+        item.product.id === productId
+          ? { ...item, quantity: newQuantity }
+          : item
+      );
+
+      localStorage.setItem("cart", JSON.stringify(updatedCart)); // Sync changes
+      return updatedCart;
+    });
   };
 
-  // Remove item from cart
+  // Remove item and sync with localStorage
   const removeItem = (key: string) => {
-    setCart((prevCart) => prevCart.filter((item) => item.key !== key));
+    setCart((prevCart) => {
+      const updatedCart = prevCart.filter((item) => item.key !== key);
+      localStorage.setItem("cart", JSON.stringify(updatedCart)); // Sync changes
+      return updatedCart;
+    });
   };
 
   // Calculate total price
-  const totalPrice = cart.reduce(
-    (total, item) =>
+  const totalPrice = cart?.reduce(
+    (total: number, item: any) =>
       total + (item.product.salePrice || item.product.price) * item.quantity,
     0
   );
@@ -87,7 +100,7 @@ const CartPage = () => {
           <div className="flex border font-semibold p-2 rounded-2xl border-gray-300 items-center gap-3">
             <button
               onClick={() =>
-                updateQuantity(record.key, Math.max(1, quantity - 1))
+                updateQuantity(record.product.id, Math.max(1, quantity - 1))
               }
               className="border bg-gray-200 rounded-2xl px-3 py-1"
             >
@@ -95,7 +108,7 @@ const CartPage = () => {
             </button>
             <span className="text-xl">{quantity}</span>
             <button
-              onClick={() => updateQuantity(record.key, quantity + 1)}
+              onClick={() => updateQuantity(record.product.id, quantity + 1)}
               className="border bg-gray-200 rounded-2xl px-3 py-1"
             >
               +
@@ -131,9 +144,16 @@ const CartPage = () => {
     },
   ];
 
-  if (isFetching) return <div>Loading...</div>;
+  const handleUpdateCart = async () => {
+    const getCart = localStorage.getItem("cart");
+    if (getCart) {
+      localStorage.removeItem("cart");
+    }
 
-  const handleUpdateCart = async () => {};
+    localStorage.setItem("cart", JSON.stringify(cart));
+    toast.success("Cart updated successfully!");
+    router.push("/checkout");
+  };
 
   return (
     <div className="min-h-screen">
@@ -168,14 +188,12 @@ const CartPage = () => {
               <span className="font-semibold">${totalPrice.toFixed(2)}</span>
             </div>
 
-            <Link href="/checkout">
-              <button
-                onClick={() => handleUpdateCart()}
-                className="w-full mt-4 bg-[#292C61] text-white py-3 rounded-2xl hover:bg-[#292C61]"
-              >
-                Proceed to Checkout
-              </button>
-            </Link>
+            <button
+              onClick={() => handleUpdateCart()}
+              className="w-full mt-4 bg-[#292C61] text-white py-3 rounded-2xl hover:bg-[#292C61]"
+            >
+              Proceed to Checkout
+            </button>
           </div>
         </div>
       </div>
