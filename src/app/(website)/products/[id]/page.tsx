@@ -13,6 +13,7 @@ import { useParams } from "next/navigation";
 import { useGetSingleProductQuery } from "@/redux/apiSlices/productSlice";
 import { FaCheckCircle } from "react-icons/fa";
 import { getImageUrl } from "@/utils/getImageUrl";
+import { useCreateCartMutation } from "@/redux/apiSlices/cartSlice";
 
 const ProductDetailsPage: React.FC = () => {
   const [mainImage, setMainImage] = useState("");
@@ -20,11 +21,12 @@ const ProductDetailsPage: React.FC = () => {
   const [quantity, setQuantity] = useState<number>(1);
   const [selectedColors, setSelectedColors] = useState("");
 
-  console.log(mainImage);
+  // console.log(mainImage);
 
   const { id } = useParams();
 
   const { data: product, isFetching } = useGetSingleProductQuery(id as string);
+  const [addToCart] = useCreateCartMutation();
 
   useEffect(() => {
     if (product) {
@@ -41,7 +43,7 @@ const ProductDetailsPage: React.FC = () => {
   }
 
   const singleProduct = product?.data;
-  console.log(singleProduct);
+  // console.log(singleProduct);
 
   const totalPrice =
     (singleProduct?.salePrice
@@ -60,6 +62,31 @@ const ProductDetailsPage: React.FC = () => {
       children: singleProduct?.additionalInfo,
     },
   ];
+
+  const handleAddToCart = async () => {
+    const data = {
+      product: id,
+      quantity: quantity,
+      color: selectedColors,
+      size: selectedSize,
+    };
+    try {
+      const response = await addToCart(data).unwrap();
+      console.log(response);
+      if (response?.success) {
+        toast.success(
+          response?.message || "Product added to cart successfully!"
+        );
+      } else {
+        toast.error(
+          response?.message || "Something went wrong. Please try again later."
+        );
+      }
+    } catch (error) {
+      console.log(error);
+      toast.error("Something went wrong. Please try again later.");
+    }
+  };
 
   return (
     <>
@@ -196,9 +223,7 @@ const ProductDetailsPage: React.FC = () => {
             </div>
             <div className="flex md:text-xl font-bold gap-4 mb-5 md:mb-0">
               <button
-                onClick={() =>
-                  toast.success("Product added to cart successfully!")
-                }
+                onClick={() => handleAddToCart()}
                 className="bg-primary text-white px-5 py-3 rounded-lg"
               >
                 Add to Cart

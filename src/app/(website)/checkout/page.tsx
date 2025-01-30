@@ -4,66 +4,34 @@ import { Form, Input, Button, Modal, Radio } from "antd";
 import { useState } from "react";
 import Image from "next/image";
 
-import productImg1 from "../../../assets/product1.1.png";
-import productImg2 from "../../../assets/product1.2.png";
-import productImg3 from "../../../assets/product1.3.png";
-import productImg4 from "../../../assets/product1.4.png";
 import { FaCheckCircle } from "react-icons/fa";
 import Link from "next/link";
 import Heading from "@/components/shared/Heading";
+import { useGetCartItemsQuery } from "@/redux/apiSlices/cartSlice";
+import { getImageUrl } from "@/utils/getImageUrl";
 
-interface CartItem {
-  key: string;
-  product: {
-    image: string;
-    name: string;
-    price: number;
-  };
-}
-
-const CheckoutPage: React.FC = () => {
-  const [cart] = useState<CartItem[]>([
-    {
-      key: "1",
-      product: {
-        image: productImg1.src,
-        name: "Bubba Kush THCA Flower",
-        price: 750,
-      },
-    },
-    {
-      key: "2",
-      product: {
-        image: productImg2.src,
-        name: "Sour Diesel THCA Flower",
-        price: 850,
-      },
-    },
-    {
-      key: "3",
-      product: {
-        image: productImg3.src,
-        name: "OG Kush THCA Flower",
-        price: 950,
-      },
-    },
-    {
-      key: "4",
-      product: {
-        image: productImg4.src,
-        name: "Granddaddy Purple THCA Flower",
-        price: 1000,
-      },
-    },
-  ]);
-
-  const totalPrice = cart.reduce(
-    (total, item) => total + item.product.price,
-    0
-  );
-
+const CheckoutPage = () => {
   const [isModalVisible, setIsModalVisible] = useState(false);
   const [deliveryOption, setDeliveryOption] = useState("default");
+
+  const { data: cartItems, isFetching } = useGetCartItemsQuery(undefined);
+
+  if (isFetching) {
+    return (
+      <div className="flex justify-center items-center min-h-screen">
+        <div className="animate-spin rounded-full h-16 w-16 border-t-4 border-blue-500"></div>
+      </div>
+    );
+  }
+
+  const cartItemsList = cartItems?.data?.products;
+  console.log(cartItemsList);
+
+  const totalPrice = cartItems?.data?.products?.reduce(
+    (total: number, item: any) =>
+      total + (item.product.salePrice || item.product.price) * item.quantity,
+    0
+  );
 
   const onFinish = (values: Record<string, unknown>) => {
     console.log("Form Values:", values);
@@ -131,13 +99,13 @@ const CheckoutPage: React.FC = () => {
               <Heading className="mx-5">Order Summary</Heading>
               <div className="w-full p-5 border-none">
                 <ul>
-                  {cart?.map((item) => (
+                  {cartItemsList?.map((item: any) => (
                     <li
                       key={item.key}
                       className="flex items-center border-t justify-between py-2"
                     >
                       <Image
-                        src={item.product.image}
+                        src={getImageUrl(item.product.image)}
                         alt={item.product.name}
                         className="w-16 h-16 object-cover"
                         width={100}
@@ -145,7 +113,11 @@ const CheckoutPage: React.FC = () => {
                       />
                       <span className="ml-4">{item.product.name}</span>
                       <span className="ml-4">
-                        ${item.product.price.toFixed(2)}
+                        $
+                        {(
+                          (item.product.salePrice || item.product.price) *
+                          item.quantity
+                        ).toFixed(2)}
                       </span>
                     </li>
                   ))}

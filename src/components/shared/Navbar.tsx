@@ -10,7 +10,6 @@ import NavItems from "./NavItems";
 import MobileDrawer from "./MobileDrawer";
 import { HiOutlineShoppingBag } from "react-icons/hi";
 import { Plus_Jakarta_Sans } from "next/font/google";
-import profileImg from "../../assets/randomProfile4.jpg";
 import { useGetUserProfileQuery } from "@/redux/apiSlices/authSlice";
 import { getImageUrl } from "@/utils/getImageUrl";
 const plusJakarta = Plus_Jakarta_Sans({
@@ -45,7 +44,7 @@ const Navbar = () => {
 
   const userProfile = userProfileData?.data?.user || [];
   const { budget, budgetLeft } = userProfileData?.data || {};
-  console.log(userProfile);
+  // console.log(userProfile);
 
   const tooltipContent = (
     <div className="flex items-center justify-between">

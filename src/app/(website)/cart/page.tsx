@@ -1,85 +1,41 @@
 "use client";
 
 import { Table } from "antd";
-import { useState } from "react";
-import productImg1 from "../../../assets/product1.1.png";
-import productImg2 from "../../../assets/product1.2.png";
-import productImg3 from "../../../assets/product1.3.png";
-import productImg4 from "../../../assets/product1.4.png";
+import { useState, useEffect } from "react";
 import Link from "next/link";
 import Heading from "@/components/shared/Heading";
 import Image from "next/image";
-import type { StaticImageData } from "next/image";
-
-interface Product {
-  image: StaticImageData;
-  name: string;
-}
+import { useGetCartItemsQuery } from "@/redux/apiSlices/cartSlice";
+import { getImageUrl } from "@/utils/getImageUrl";
 
 interface CartItem {
   key: string;
-  product: Product;
-  price: number;
+  product: {
+    image: string;
+    name: string;
+    price: number;
+    salePrice?: number;
+  };
   quantity: number;
-  subtotal: number;
 }
 
-const CartPage: React.FC = () => {
-  // Cart state
-  const [cart, setCart] = useState<CartItem[]>([
-    {
-      key: "1",
-      product: {
-        image: productImg1,
-        name: "Bubba Kush THCA Flower",
-      },
-      price: 750,
-      quantity: 1,
-      subtotal: 750,
-    },
-    {
-      key: "2",
-      product: {
-        image: productImg2,
-        name: "Sour Diesel THCA Flower",
-      },
-      price: 850,
-      quantity: 2,
-      subtotal: 1700,
-    },
-    {
-      key: "3",
-      product: {
-        image: productImg3,
-        name: "OG Kush THCA Flower",
-      },
-      price: 950,
-      quantity: 1,
-      subtotal: 950,
-    },
-    {
-      key: "4",
-      product: {
-        image: productImg4,
-        name: "Granddaddy Purple THCA Flower",
-      },
-      price: 1000,
-      quantity: 3,
-      subtotal: 3000,
-    },
-  ]);
+const CartPage = () => {
+  const { data: cartItems, isFetching } = useGetCartItemsQuery(undefined);
+  const [cart, setCart] = useState<CartItem[]>([]);
+
+  console.log(cart);
+
+  useEffect(() => {
+    if (cartItems?.data?.products) {
+      setCart(cartItems.data.products);
+    }
+  }, [cartItems]);
 
   // Update quantity
   const updateQuantity = (key: string, newQuantity: number) => {
     setCart((prevCart) =>
-      prevCart?.map((item) =>
-        item.key === key
-          ? {
-              ...item,
-              quantity: newQuantity,
-              subtotal: newQuantity * item.price,
-            }
-          : item
+      prevCart.map((item) =>
+        item.key === key ? { ...item, quantity: newQuantity } : item
       )
     );
   };
@@ -90,17 +46,21 @@ const CartPage: React.FC = () => {
   };
 
   // Calculate total price
-  const totalPrice = cart.reduce((total, item) => total + item.subtotal, 0);
+  const totalPrice = cart.reduce(
+    (total, item) =>
+      total + (item.product.salePrice || item.product.price) * item.quantity,
+    0
+  );
 
   const columns = [
     {
       title: "Product",
       dataIndex: "product",
       key: "product",
-      render: (product: Product) => (
+      render: (product: any, record: any) => (
         <div className="flex items-center gap-4">
           <Image
-            src={product.image.src}
+            src={getImageUrl(record.product.image)}
             alt={product.name}
             className="w-16 h-16 object-cover"
             width={200}
@@ -114,18 +74,20 @@ const CartPage: React.FC = () => {
       title: "Price",
       dataIndex: "price",
       key: "price",
-      render: (price: number) => `$${price.toFixed(2)}`,
+      render: (_: any, record: any) => (
+        <p>${record.product.salePrice || record.product.price}</p>
+      ),
     },
     {
       title: "Quantity",
       dataIndex: "quantity",
       key: "quantity",
-      render: (quantity: number, record: CartItem) => (
+      render: (quantity: number, record: any) => (
         <div className="flex items-center gap-4 mt-3">
           <div className="flex border font-semibold p-2 rounded-2xl border-gray-300 items-center gap-3">
             <button
               onClick={() =>
-                updateQuantity(record.key, quantity > 1 ? quantity - 1 : 1)
+                updateQuantity(record.key, Math.max(1, quantity - 1))
               }
               className="border bg-gray-200 rounded-2xl px-3 py-1"
             >
@@ -146,12 +108,19 @@ const CartPage: React.FC = () => {
       title: "Subtotal",
       dataIndex: "subtotal",
       key: "subtotal",
-      render: (subtotal: number) => `$${subtotal.toFixed(2)}`,
+      render: (_: any, record: any) => (
+        <p>
+          $
+          {(
+            (record.product.salePrice || record.product.price) * record.quantity
+          ).toFixed(2)}
+        </p>
+      ),
     },
     {
       title: "Action",
       key: "action",
-      render: (_: unknown, record: CartItem) => (
+      render: (_: any, record: any) => (
         <button
           className="text-red-500 hover:underline"
           onClick={() => removeItem(record.key)}
@@ -162,6 +131,10 @@ const CartPage: React.FC = () => {
     },
   ];
 
+  if (isFetching) return <div>Loading...</div>;
+
+  const handleUpdateCart = async () => {};
+
   return (
     <div className="min-h-screen">
       <Heading className="text-center mt-10">Cart</Heading>
@@ -169,6 +142,7 @@ const CartPage: React.FC = () => {
         <div className="md:w-[70%] border rounded-2xl shadow-lg">
           <Table
             className="border-t-8 border-t-[#292C61] rounded-2xl"
+            rowKey="key"
             dataSource={cart}
             columns={columns}
             pagination={false}
@@ -195,7 +169,10 @@ const CartPage: React.FC = () => {
             </div>
 
             <Link href="/checkout">
-              <button className="w-full mt-4 bg-[#292C61] text-white py-3 rounded-2xl hover:bg-[#292C61]">
+              <button
+                onClick={() => handleUpdateCart()}
+                className="w-full mt-4 bg-[#292C61] text-white py-3 rounded-2xl hover:bg-[#292C61]"
+              >
                 Proceed to Checkout
               </button>
             </Link>

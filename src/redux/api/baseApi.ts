@@ -19,7 +19,7 @@ const api = createApi({
     },
   }),
   endpoints: () => ({}),
-  tagTypes: ["category", "product", "order", "userProfile"],
+  tagTypes: ["category", "product", "order", "userProfile", "cart"],
 });
 
 export const { reducer } = api;

@@ -21,7 +21,7 @@ const bigShoulders = Big_Shoulders_Display({
 });
 
 const YouMayLikeSection = ({ categoryId }: { categoryId: string }) => {
-  console.log(categoryId);
+  // console.log(categoryId);
 
   const { data: products, isLoading } =
     useGetProductByCategoryQuery(categoryId);
@@ -42,7 +42,7 @@ const YouMayLikeSection = ({ categoryId }: { categoryId: string }) => {
 
   const productsData = products?.data;
 
-  console.log(productsData);
+  // console.log(productsData);
 
   const CustomPrevArrow = ({ onClick }: { onClick?: () => void }) => (
     <div
