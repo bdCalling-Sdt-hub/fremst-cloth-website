@@ -64,7 +64,7 @@ const productServiceApi = api.injectEndpoints({
     }),
     getWinterCollection: builder.query({
       query: () => ({
-        url: "/product?searchTerm=winter",
+        url: "/product",
         method: "GET",
       }),
       providesTags: ["product"],

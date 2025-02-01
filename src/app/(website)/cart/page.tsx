@@ -152,9 +152,14 @@ const CartPage = () => {
         localStorage.removeItem("cart");
       }
 
-      localStorage.setItem("cart", JSON.stringify(cart));
-      toast.success("Cart updated successfully!");
-      router.push("/checkout");
+      if (cart.length === 0) {
+        toast.error("Cart is empty!");
+        return;
+      } else {
+        localStorage.setItem("cart", JSON.stringify(cart));
+        toast.success("Cart updated successfully!");
+        router.push("/checkout");
+      }
     }
   };
 
@@ -165,8 +170,8 @@ const CartPage = () => {
         <div className="md:w-[70%] border rounded-2xl shadow-lg">
           <Table
             className="border-t-8 border-t-[#292C61] rounded-2xl"
-            rowKey="key"
             dataSource={cart}
+            rowKey={(record) => record?.product?.id}
             columns={columns}
             pagination={false}
             scroll={{ x: 700 }}

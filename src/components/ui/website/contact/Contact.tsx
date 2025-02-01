@@ -29,7 +29,7 @@ const Contact = () => {
   const contactDetails = [
     {
       title: "Phone Number",
-      description: ["+41 949 214802", "+41 773 34593"],
+      description: ["+46 415 22 000"],
       icon: (
         <GiRotaryPhone
           size={40}
@@ -40,7 +40,7 @@ const Contact = () => {
     },
     {
       title: "Email",
-      description: ["testdomain@gmail.com", "mithila@gmail.com"],
+      description: ["info@fremst.se"],
 
       icon: <Mail className="w-10 h-10 text-primary" />,
     },

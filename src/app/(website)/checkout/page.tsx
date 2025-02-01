@@ -27,8 +27,11 @@ interface CartItem {
 
 const CheckoutPage = () => {
   const [isModalVisible, setIsModalVisible] = useState(false);
-  const [deliveryOption, setDeliveryOption] = useState("default");
+  const [deliveryOption, setDeliveryOption] = useState("delivery");
   const [cart, setCart] = useState<CartItem[]>([]);
+  const [form] = Form.useForm();
+
+  console.log(deliveryOption);
 
   const { data: userData, isFetching } = useGetUserProfileQuery(undefined);
   const [placeOrder] = useCreateOrderMutation();
@@ -49,7 +52,6 @@ const CheckoutPage = () => {
   }
 
   const userDetails = userData?.data?.user;
-
   const { address } = userDetails;
 
   const totalPrice = cart?.reduce(
@@ -66,9 +68,15 @@ const CheckoutPage = () => {
         size: item.size,
         color: item.color,
       })),
-      address: values.address,
+      address: {
+        streetAddress: values?.address?.streetAddress,
+        city: values?.address?.city,
+        postalCode: values?.address?.postalCode,
+      },
       additionalInfo: values.orderNotes,
     };
+
+    console.log(data);
 
     try {
       const res = await placeOrder(data).unwrap();
@@ -88,11 +96,21 @@ const CheckoutPage = () => {
     setIsModalVisible(false);
   };
 
+  const handleDeliveryOptionChange = (e: any) => {
+    setDeliveryOption(e.target.value);
+
+    // Reset address fields if delivery option is "collect"
+    if (e.target.value === "collect") {
+      form.resetFields(["address", "streetAddress", "city", "postalCode"]);
+    }
+  };
+
   return (
     <div className="bg-white">
       <Heading className="text-center">Checkout</Heading>
       <div className="p-10 max-w-7xl mx-auto">
         <Form
+          form={form}
           layout="vertical"
           className="w-full md:flex gap-5"
           onFinish={onFinish}
@@ -108,43 +126,73 @@ const CheckoutPage = () => {
             </Form.Item>
 
             <h1 className="text-3xl font-semibold my-5">
-              Choose delivery address
+              Choose delivery option
             </h1>
-            <Form.Item name="deliveryOption">
+            <Form.Item name="deliveryOption" valuePropName="checked">
               <Radio.Group
-                onChange={(e) => setDeliveryOption(e.target.value)}
+                onChange={handleDeliveryOptionChange}
                 value={deliveryOption}
                 className="flex flex-col"
               >
-                <Radio
-                  value="default"
-                  className="text-lg"
-                  onChange={(e) => setDeliveryOption(e.target.value)}
-                >
-                  Use my default address
-                </Radio>{" "}
-                <br />
-                <Radio
-                  value="different"
-                  className="text-lg"
-                  onChange={(e) => setDeliveryOption(e.target.value)}
-                >
-                  Ship to a different address
+                <Radio value="delivery" className="text-lg">
+                  Delivery Address
+                </Radio>
+
+                <Radio value="collect" className="text-lg">
+                  Collect from our store
                 </Radio>
               </Radio.Group>
             </Form.Item>
 
-            <Form.Item
-              label="Address"
-              name="address"
-              rules={[{ required: true }]}
-            >
-              <Input
-                className="py-2"
-                placeholder="Address"
-                defaultValue={deliveryOption === "default" ? address : ""}
-              />
-            </Form.Item>
+            {deliveryOption === "delivery" && (
+              <div className="flex w-full gap-5">
+                <div className="w-1/3">
+                  <Form.Item
+                    label="Street Address"
+                    name={["address", "streetAddress"]}
+                    rules={[
+                      { required: true, message: "Street Address is required" },
+                    ]}
+                  >
+                    <Input
+                      className="py-2"
+                      placeholder="Street Address"
+                      defaultValue={address?.streetAddress}
+                    />
+                  </Form.Item>
+                </div>
+
+                <div className="w-1/3">
+                  <Form.Item
+                    label="City"
+                    name={["address", "city"]}
+                    rules={[{ required: true, message: "City is required" }]}
+                  >
+                    <Input
+                      className="py-2"
+                      placeholder="City"
+                      defaultValue={address?.city}
+                    />
+                  </Form.Item>
+                </div>
+
+                <div className="w-1/3">
+                  <Form.Item
+                    label="Postal Code"
+                    name={["address", "postalCode"]}
+                    rules={[
+                      { required: true, message: "Postal Code is required" },
+                    ]}
+                  >
+                    <Input
+                      className="py-2"
+                      placeholder="Postal Code"
+                      defaultValue={address?.postalCode}
+                    />
+                  </Form.Item>
+                </div>
+              </div>
+            )}
 
             <Heading className="">Additional Info</Heading>
             <Form.Item label="Order Notes (Optional)" name="orderNotes">
@@ -159,7 +207,7 @@ const CheckoutPage = () => {
                 <ul>
                   {cart?.map((item: any) => (
                     <li
-                      key={item.key}
+                      key={item?.product?.id}
                       className="flex items-center border-t justify-between py-2"
                     >
                       <Image
@@ -171,7 +219,7 @@ const CheckoutPage = () => {
                       />
                       <span className="ml-4">{item.product.name}</span>
                       <span className="ml-4">
-                        $
+                        $$
                         {(
                           (item.product.salePrice || item.product.price) *
                           item.quantity

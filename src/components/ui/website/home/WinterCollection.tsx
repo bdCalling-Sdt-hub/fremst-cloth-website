@@ -34,7 +34,7 @@ const WinterCollection = () => {
     );
   }
 
-  const productsData = getAllProducts?.data;
+  const productsData = getAllProducts?.data?.slice(0, 4).reverse();
   console.log(productsData);
 
   const CustomNextArrow = ({ onClick }: { onClick?: () => void }) => (
@@ -133,7 +133,7 @@ const WinterCollection = () => {
       <div className=" pb-[50px]">
         <Heading className=" underline underline-offset-[12px] underline-primary   ">
           {" "}
-          WINTER cOLLECTIONS
+          OUR TOP COLLECTIONS
         </Heading>
         <p className="border-b border-gray-300"></p>
         <div className="flex items-center justify-end -mt-5">
