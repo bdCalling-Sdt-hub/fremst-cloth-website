@@ -25,6 +25,17 @@ interface CartItem {
   quantity: number;
 }
 
+interface Address {
+  streetAddress?: string;
+  city?: string;
+  postalCode?: string;
+}
+
+interface FormValues {
+  address?: Address;
+  orderNotes?: string;
+}
+
 const CheckoutPage = () => {
   const [isModalVisible, setIsModalVisible] = useState(false);
   const [deliveryOption, setDeliveryOption] = useState("delivery");
@@ -60,7 +71,7 @@ const CheckoutPage = () => {
     0
   );
 
-  const onFinish = async (values: Record<string, unknown>) => {
+  const onFinish = async (values: FormValues) => {
     const data = {
       items: cart?.map((item: any) => ({
         product: item.product.id,
