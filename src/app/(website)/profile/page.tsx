@@ -58,7 +58,7 @@ const ProfilePage = () => {
   const userDetails = userProfileData?.data || [];
   const userProfile = userProfileData?.data?.user || [];
   const orders = orderData?.data?.data || [];
-  // console.log(userDetails);
+  console.log(userDetails);
 
   const showModal = () => {
     if (!userProfile) {
@@ -70,7 +70,11 @@ const ProfilePage = () => {
       name: userProfile?.name || "",
       email: userProfile?.email || "",
       phone: userProfile?.contact || "",
-      address: userProfile?.address || "",
+
+      streetAddress: userProfile?.address?.streetAddress || "",
+      city: userProfile?.address?.city || "",
+      postalCode: userProfile?.address?.postalCode || "",
+
       company: userDetails?.company?.user?.name || "",
       designation: userDetails?.designation || "",
     });
@@ -99,7 +103,11 @@ const ProfilePage = () => {
         name: values.name,
         email: values.email,
         contact: values.phone,
-        address: values.address,
+        address: {
+          streetAddress: values.streetAddress,
+          city: values.city,
+          postalCode: values.postalCode,
+        },
         designation: values.designation,
       };
 
@@ -269,7 +277,11 @@ const ProfilePage = () => {
               <span>
                 <MdOutlineLocationOn />
               </span>
-              {userProfile?.address || "Unknown"}
+              {userProfile?.address
+                ? userProfile?.address?.streetAddress
+                  ? `${userProfile?.address?.streetAddress} ${userProfile?.address?.city} ${userProfile?.address?.postalCode}`
+                  : ""
+                : "N/A"}
             </h1>
           </div>
         </div>
@@ -317,13 +329,32 @@ const ProfilePage = () => {
                     >
                       <Input style={{ height: "50px", width: "100%" }} />
                     </Form.Item>
-                    <Form.Item
-                      name="address"
-                      label="Address"
-                      rules={[{ required: true }]}
-                    >
-                      <Input style={{ height: "50px", width: "100%" }} />
-                    </Form.Item>
+                    <div className="flex gap-3">
+                      <Form.Item
+                        name="streetAddress"
+                        label="Street Address"
+                        rules={[{ required: true }]}
+                        style={{ width: "33%" }}
+                      >
+                        <Input />
+                      </Form.Item>
+                      <Form.Item
+                        name="city"
+                        label="City"
+                        rules={[{ required: true }]}
+                        style={{ width: "33%" }}
+                      >
+                        <Input />
+                      </Form.Item>
+                      <Form.Item
+                        name="postalCode"
+                        label="Postal Code"
+                        rules={[{ required: true }]}
+                        style={{ width: "33%" }}
+                      >
+                        <Input />
+                      </Form.Item>
+                    </div>
                   </div>
                   <div style={{ width: "48%" }}>
                     <Form.Item label="Profile Image">

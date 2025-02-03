@@ -8,13 +8,8 @@ import { FaFacebookF, FaLinkedinIn, FaTwitter } from "react-icons/fa";
 import { BsWhatsapp } from "react-icons/bs";
 import { Send } from "lucide-react";
 import { Big_Shoulders_Display } from "next/font/google";
-import { Rubik } from "next/font/google";
-import { Plus_Jakarta_Sans } from "next/font/google";
 
-const rubik = Rubik({
-  weight: ["400", "500", "600", "700"],
-  subsets: ["latin"],
-});
+import { Plus_Jakarta_Sans } from "next/font/google";
 
 const bigShoulders = Big_Shoulders_Display({
   subsets: ["latin"],
@@ -80,13 +75,13 @@ const Footer = () => {
                 />
               </Link>
             </div>
-            <p
+            {/* <p
               className={` ${rubik.className} text-[#EFFBF0] text-[15px] font-[400] pb-4 ps-2.5 py-[14px] tracking-wide w-[300px]`}
             >
               Helping you find and become a member of a Barcelona Cannabis club
               near you.
-            </p>
-            <div className="flex gap-4 ps-2.5">
+            </p> */}
+            <div className="flex gap-4 mt-10 ps-2.5">
               {socialLinks.map(({ Icon, href }, index) => (
                 <a
                   key={index}
