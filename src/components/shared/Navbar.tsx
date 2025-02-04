@@ -5,13 +5,14 @@ import Image from "next/image";
 import Link from "next/link";
 import { AiOutlineMenu } from "react-icons/ai";
 import { useEffect, useState } from "react";
-import { Badge, Tooltip } from "antd";
+import { Badge, Dropdown, MenuProps, Tooltip } from "antd";
 import NavItems from "./NavItems";
 import MobileDrawer from "./MobileDrawer";
 import { HiOutlineShoppingBag } from "react-icons/hi";
 import { Plus_Jakarta_Sans } from "next/font/google";
 import { useGetUserProfileQuery } from "@/redux/apiSlices/authSlice";
 import { getImageUrl } from "@/utils/getImageUrl";
+
 const plusJakarta = Plus_Jakarta_Sans({
   subsets: ["latin"],
   weight: ["400", "500", "600", "700"],
@@ -63,7 +64,8 @@ const Navbar = () => {
       <div className="p-2 w-[235px]">
         <p className="font-bold mb-1 text-[12px]">
           Remaining Credit:{" "}
-          <span className="text-red-500"> ${budgetLeft} </span> of ${budget}
+          <span className="text-red-500"> ${budgetLeft?.toFixed(1)} </span> of $
+          {budget}
         </p>
         <p className="text-[12px]">
           You can still purchase items worth up to this amount. Be mindful of
@@ -78,6 +80,33 @@ const Navbar = () => {
     { key: "products", label: "Products", path: "/products" },
     { key: "about-us", label: "About Us", path: "/about-us" },
     { key: "contact-us", label: "Contact Us", path: "/contact" },
+  ];
+
+  const items2: MenuProps["items"] = [
+    {
+      label: <Link href={"/profile"}> Profile </Link>,
+      key: "0",
+    },
+    {
+      label: (
+        <Link
+          href={"/login"}
+          onClick={() => {
+            localStorage.removeItem("authToken");
+            localStorage.removeItem("refreshToken");
+            localStorage.removeItem("role");
+            localStorage.removeItem("cart");
+            sessionStorage.removeItem("accessToken");
+            sessionStorage.removeItem("refreshToken");
+            sessionStorage.removeItem("role");
+            window.location.reload();
+          }}
+        >
+          Logout
+        </Link>
+      ),
+      key: "1",
+    },
   ];
 
   return (
@@ -139,20 +168,22 @@ const Navbar = () => {
                   </div>
                 </Tooltip>
 
-                <Link href={"/profile"}>
-                  <div className="flex items-center justify-center border-4 pe-4 p-1 rounded-full gap-2">
-                    <div>
-                      <Image
-                        src={getImageUrl(userProfile?.profile)}
-                        alt=""
-                        height={44}
-                        width={44}
-                        className="w-12 h-12 rounded-full object-cover"
-                      />
+                <Dropdown menu={{ items: items2 }}>
+                  <a onClick={(e) => e.preventDefault()}>
+                    <div className="flex items-center cursor-pointer justify-center border-4 pe-4 p-1 rounded-full gap-2">
+                      <div>
+                        <Image
+                          src={getImageUrl(userProfile?.profile)}
+                          alt=""
+                          height={44}
+                          width={44}
+                          className="w-12 h-12 rounded-full object-cover"
+                        />
+                      </div>
+                      <p className="text-sm md:text-xl">{userProfile?.name}</p>
                     </div>
-                    <p className="text-xl">{userProfile?.name}</p>
-                  </div>
-                </Link>
+                  </a>
+                </Dropdown>
               </div>
             ) : (
               <Link href="/login">

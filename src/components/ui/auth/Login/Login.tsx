@@ -25,15 +25,17 @@ const Login = () => {
           localStorage.setItem("refreshToken", res?.data?.refreshToken);
           localStorage.setItem("role", res?.data?.role);
           Cookies.set("refreshToken", res?.data?.refreshToken);
-          router.push("/");
         } else {
           sessionStorage.setItem("authToken", res?.data?.accessToken);
           sessionStorage.setItem("refreshToken", res?.data?.refreshToken);
           sessionStorage.setItem("role", res?.data?.role);
           Cookies.set("refreshToken", res?.data?.refreshToken);
-          router.push("/");
         }
         toast.success(res?.message);
+
+        setTimeout(() => {
+          router.replace("/");
+        }, 500);
       }
     } catch (error) {
       console.log(error);
