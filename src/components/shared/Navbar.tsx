@@ -12,6 +12,7 @@ import { HiOutlineShoppingBag } from "react-icons/hi";
 import { Plus_Jakarta_Sans } from "next/font/google";
 import { useGetUserProfileQuery } from "@/redux/apiSlices/authSlice";
 import { getImageUrl } from "@/utils/getImageUrl";
+import Currency from "@/utils/Currency";
 
 const plusJakarta = Plus_Jakarta_Sans({
   subsets: ["latin"],
@@ -59,13 +60,13 @@ const Navbar = () => {
   const tooltipContent = (
     <div className="flex items-center justify-between">
       <div className="w-[40px] hidden h-10 bg-primary text-white rounded-full md:flex items-center justify-center font-semibold text-[12px]">
-        {budgetLeft}${" "}
+        {budgetLeft} <Currency />
       </div>
       <div className="p-2 w-[235px]">
         <p className="font-bold mb-1 text-[12px]">
           Remaining Credit:{" "}
-          <span className="text-red-500"> ${budgetLeft?.toFixed(1)} </span> of $
-          {budget}
+          <span className="text-red-500"> {budgetLeft?.toFixed(1)} </span> of
+          {budget} <Currency />
         </p>
         <p className="text-[12px]">
           You can still purchase items worth up to this amount. Be mindful of
@@ -164,7 +165,7 @@ const Navbar = () => {
                   overlayClassName="tooltip-content"
                 >
                   <div className="border-2 p-1 border-primary w-14 h-14 rounded-full text-gray-600 flex items-center justify-center text-[12px] font-semibold">
-                    ${Math.trunc(budgetLeft)}
+                    {Math.trunc(budgetLeft)} <Currency />
                   </div>
                 </Tooltip>
 

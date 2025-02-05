@@ -10,6 +10,7 @@ import {
   useGetAllProductsQuery,
   useGetCategoriesQuery,
 } from "@/redux/apiSlices/productSlice";
+import Currency from "@/utils/Currency";
 
 const bigShoulders = Big_Shoulders_Display({
   subsets: ["latin"],
@@ -95,7 +96,8 @@ const ShopPage = () => {
             />
           </ConfigProvider>
           <p className="font-bold">
-            Price: ${priceRange[0]}.00 - ${priceRange[1]}.00
+            Price: {priceRange[0]}.00 <Currency /> - {priceRange[1]}.00{" "}
+            <Currency />
           </p>
 
           {/* Category Filter */}

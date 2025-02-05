@@ -37,6 +37,7 @@ import {
 } from "@/redux/apiSlices/authSlice";
 import { getImageUrl } from "@/utils/getImageUrl";
 import { useOrdersByUserQuery } from "@/redux/apiSlices/orderSlice";
+import Currency from "@/utils/Currency";
 
 const ProfilePage = () => {
   const [isModalVisible, setIsModalVisible] = useState(false);
@@ -438,7 +439,10 @@ const ProfilePage = () => {
           </h1>
           <div className="p-5">
             <h1 className="text-lg">
-              Assigned Budget: <span>${userDetails?.budget}</span>
+              Assigned Budget:{" "}
+              <span>
+                {userDetails?.budget} <Currency />
+              </span>
             </h1>
             <h1 className="text-lg">
               Budget Duration : <span>{userDetails?.duration} Months</span>

@@ -13,6 +13,7 @@ import { useParams } from "next/navigation";
 import { useGetSingleProductQuery } from "@/redux/apiSlices/productSlice";
 import { FaCheckCircle } from "react-icons/fa";
 import { getImageUrl } from "@/utils/getImageUrl";
+import Currency from "@/utils/Currency";
 
 const ProductDetailsPage: React.FC = () => {
   const [mainImage, setMainImage] = useState("");
@@ -128,15 +129,15 @@ const ProductDetailsPage: React.FC = () => {
               {singleProduct?.salePrice ? (
                 <div>
                   <p className="line-through text-gray-500">
-                    ${singleProduct?.price}
+                    {singleProduct?.price} <Currency />
                   </p>
                   <p className="absolute font-bold top-4 left-0 text-2xl ">
-                    ${singleProduct?.salePrice}
+                    {singleProduct?.salePrice} <Currency />
                   </p>
                 </div>
               ) : (
                 <p className="absolute font-bold top-4 left-0 text-2xl ">
-                  ${singleProduct?.price}
+                  {singleProduct?.price} <Currency />
                 </p>
               )}
             </div>
@@ -220,7 +221,7 @@ const ProductDetailsPage: React.FC = () => {
                 </button>
               </div>
               <p className="text-3xl font-bold text-primary">
-                ${totalPrice.toFixed(2)}
+                {totalPrice.toFixed(2)} <Currency />
               </p>
             </div>
             <div className="flex md:text-xl font-bold gap-4 mb-5 md:mb-0">

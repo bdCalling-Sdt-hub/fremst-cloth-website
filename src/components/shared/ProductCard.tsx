@@ -5,6 +5,7 @@ import { Big_Shoulders_Display } from "next/font/google";
 import Link from "next/link";
 import { getImageUrl } from "@/utils/getImageUrl";
 import Image from "next/image";
+import Currency from "@/utils/Currency";
 const plusJakarta = Plus_Jakarta_Sans({
   subsets: ["latin"],
   weight: ["400", "500", "600", "700"],
@@ -54,7 +55,7 @@ const ProductCard = ({ product }: { product: any }) => {
           className={`${bigShoulders.className} 
           text-2xl tracking-wide font-normal mb-4 `}
         >
-          ${product.price}
+          {product.price} <Currency />
         </p>
         <Link href={`/products/${product?._id}`}>
           <button

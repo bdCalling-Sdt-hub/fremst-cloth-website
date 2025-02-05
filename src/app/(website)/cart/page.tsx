@@ -9,6 +9,7 @@ import Image from "next/image";
 import { getImageUrl } from "@/utils/getImageUrl";
 import toast from "react-hot-toast";
 import { useRouter } from "next/navigation";
+import Currency from "@/utils/Currency";
 
 interface CartItem {
   key: string;
@@ -88,7 +89,9 @@ const CartPage = () => {
       dataIndex: "price",
       key: "price",
       render: (_: any, record: any) => (
-        <p>${record.product.salePrice || record.product.price}</p>
+        <p>
+          {record.product.salePrice || record.product.price} <Currency />
+        </p>
       ),
     },
     {
@@ -123,10 +126,10 @@ const CartPage = () => {
       key: "subtotal",
       render: (_: any, record: any) => (
         <p>
-          $
           {(
             (record.product.salePrice || record.product.price) * record.quantity
-          ).toFixed(2)}
+          ).toFixed(2)}{" "}
+          <Currency />
         </p>
       ),
     },
@@ -185,7 +188,9 @@ const CartPage = () => {
 
             <div className="flex justify-between border-b-2 pb-3 text-lg mb-2">
               <span>Subtotal:</span>
-              <span className="font-semibold">${totalPrice.toFixed(2)}</span>
+              <span className="font-semibold">
+                {totalPrice.toFixed(2)} <Currency />
+              </span>
             </div>
             <div className="flex justify-between border-b-2 pb-3 text-lg mb-2">
               <span>Shipping:</span>
@@ -193,7 +198,9 @@ const CartPage = () => {
             </div>
             <div className="flex justify-between pb-3 text-lg mb-2">
               <span>Total:</span>
-              <span className="font-semibold">${totalPrice.toFixed(2)}</span>
+              <span className="font-semibold">
+                {totalPrice.toFixed(2)} <Currency />
+              </span>
             </div>
 
             <button

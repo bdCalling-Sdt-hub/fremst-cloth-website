@@ -3,7 +3,7 @@
 import TextInput from "@/components/shared/TextInput";
 import { useLoginMutation } from "@/redux/apiSlices/authSlice";
 import { Checkbox, Form, Input } from "antd";
-import Link from "next/link";
+
 import { useRouter } from "next/navigation";
 import React from "react";
 import toast from "react-hot-toast";
@@ -36,6 +36,8 @@ const Login = () => {
         setTimeout(() => {
           router.replace("/");
         }, 500);
+      } else {
+        toast.error(res?.message);
       }
     } catch (error) {
       console.log(error);
@@ -118,14 +120,6 @@ const Login = () => {
           </button>
         </Form.Item>
       </Form>
-
-      <div className=" flex items-center justify-center gap-1 py-4">
-        <p className="text-[#636363]">Don’t have any account?</p>
-        <Link href="/register" className="text-[#1854F9] font-semibold">
-          {" "}
-          Sign Up
-        </Link>
-      </div>
     </div>
   );
 };

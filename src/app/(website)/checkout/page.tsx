@@ -12,6 +12,7 @@ import { getImageUrl } from "@/utils/getImageUrl";
 import { useCreateOrderMutation } from "@/redux/apiSlices/orderSlice";
 import toast from "react-hot-toast";
 import { useGetUserProfileQuery } from "@/redux/apiSlices/authSlice";
+import Currency from "@/utils/Currency";
 
 interface CartItem {
   key: string;
@@ -230,17 +231,19 @@ const CheckoutPage = () => {
                       />
                       <span className="ml-4">{item.product.name}</span>
                       <span className="ml-4">
-                        $$
                         {(
                           (item.product.salePrice || item.product.price) *
                           item.quantity
-                        ).toFixed(2)}
+                        ).toFixed(2)}{" "}
+                        <Currency />
                       </span>
                     </li>
                   ))}
                   <li className="flex items-center justify-between font-bold py-3 border-t">
                     <span>Subtotal:</span>
-                    <span>${totalPrice.toFixed(2)}</span>
+                    <span>
+                      {totalPrice.toFixed(2)} <Currency />
+                    </span>
                   </li>
                   <li className="flex items-center justify-between font-bold py-3 border-t">
                     <span>Shipping:</span>
@@ -248,7 +251,9 @@ const CheckoutPage = () => {
                   </li>
                   <li className="flex items-center justify-between font-bold py-3 border-t">
                     <span>Total:</span>
-                    <span>${totalPrice.toFixed(2)}</span>
+                    <span>
+                      {totalPrice.toFixed(2)} <Currency />
+                    </span>
                   </li>
                 </ul>
               </div>
