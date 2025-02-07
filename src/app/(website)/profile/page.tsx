@@ -38,6 +38,7 @@ import {
 import { getImageUrl } from "@/utils/getImageUrl";
 import { useOrdersByUserQuery } from "@/redux/apiSlices/orderSlice";
 import Currency from "@/utils/Currency";
+import logo from "../../../assets/logo.png";
 
 const ProfilePage = () => {
   const [isModalVisible, setIsModalVisible] = useState(false);
@@ -53,7 +54,11 @@ const ProfilePage = () => {
   const [updateProfile] = useUpdateUserProfileMutation();
 
   if (isLoading || orderLoading) {
-    return <div>Loading...</div>;
+    return (
+      <div className="flex min-h-screen items-center justify-center">
+        <Image src={logo} alt="" />
+      </div>
+    );
   }
 
   const userDetails = userProfileData?.data || [];

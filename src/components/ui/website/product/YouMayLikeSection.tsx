@@ -9,6 +9,8 @@ import ProductCard from "@/components/shared/ProductCard";
 import "slick-carousel/slick/slick.css";
 import "slick-carousel/slick/slick-theme.css";
 import { useGetProductByCategoryQuery } from "@/redux/apiSlices/productSlice";
+import Image from "next/image";
+import logo from "../../../../assets/logo.png";
 
 const plusJakarta = Plus_Jakarta_Sans({
   subsets: ["latin"],
@@ -38,7 +40,13 @@ const YouMayLikeSection = ({ categoryId }: { categoryId: string }) => {
     </div>
   );
 
-  if (isLoading) return <div>Loading...</div>;
+  if (isLoading) {
+    return (
+      <div className="flex min-h-screen items-center justify-center">
+        <Image src={logo} alt="" />
+      </div>
+    );
+  }
 
   const productsData = products?.data;
 

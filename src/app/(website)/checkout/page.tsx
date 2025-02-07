@@ -33,6 +33,7 @@ interface Address {
 }
 
 interface FormValues {
+  name: string;
   address?: Address;
   orderNotes?: string;
 }
@@ -80,6 +81,7 @@ const CheckoutPage = () => {
         size: item.size,
         color: item.color,
       })),
+      name: values?.name,
       address: {
         streetAddress: values?.address?.streetAddress,
         city: values?.address?.city,
@@ -126,12 +128,19 @@ const CheckoutPage = () => {
           layout="vertical"
           className="w-full md:flex gap-5"
           onFinish={onFinish}
+          initialValues={{
+            address: {
+              streetAddress: address?.streetAddress,
+              city: address?.city,
+              postalCode: address?.postalCode,
+            },
+          }}
         >
           <div className="md:w-[70%] md:p-10 md:border rounded-2xl md:shadow-lg">
             <Heading className="">Billing Information</Heading>
             <Form.Item
               label="Full Name"
-              name="fullName"
+              name="name"
               rules={[{ required: true }]}
             >
               <Input className="py-2" placeholder="Full Name" />
@@ -166,11 +175,7 @@ const CheckoutPage = () => {
                       { required: true, message: "Street Address is required" },
                     ]}
                   >
-                    <Input
-                      className="py-2"
-                      placeholder="Street Address"
-                      defaultValue={address?.streetAddress}
-                    />
+                    <Input className="py-2" placeholder="Street Address" />
                   </Form.Item>
                 </div>
 
@@ -180,11 +185,7 @@ const CheckoutPage = () => {
                     name={["address", "city"]}
                     rules={[{ required: true, message: "City is required" }]}
                   >
-                    <Input
-                      className="py-2"
-                      placeholder="City"
-                      defaultValue={address?.city}
-                    />
+                    <Input className="py-2" placeholder="City" />
                   </Form.Item>
                 </div>
 
@@ -196,11 +197,7 @@ const CheckoutPage = () => {
                       { required: true, message: "Postal Code is required" },
                     ]}
                   >
-                    <Input
-                      className="py-2"
-                      placeholder="Postal Code"
-                      defaultValue={address?.postalCode}
-                    />
+                    <Input className="py-2" placeholder="Postal Code" />
                   </Form.Item>
                 </div>
               </div>

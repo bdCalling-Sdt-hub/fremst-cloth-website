@@ -13,6 +13,7 @@ import { Plus_Jakarta_Sans } from "next/font/google";
 import { useGetUserProfileQuery } from "@/redux/apiSlices/authSlice";
 import { getImageUrl } from "@/utils/getImageUrl";
 import Currency from "@/utils/Currency";
+import logo from "../../assets/logo.png";
 
 const plusJakarta = Plus_Jakarta_Sans({
   subsets: ["latin"],
@@ -50,7 +51,11 @@ const Navbar = () => {
   }, []);
 
   if (isLoading) {
-    return <div>Loading...</div>;
+    return (
+      <div className="flex min-h-screen items-center justify-center">
+        <Image src={logo} alt="" />
+      </div>
+    );
   }
 
   const userProfile = userProfileData?.data?.user || [];
@@ -97,7 +102,7 @@ const Navbar = () => {
             localStorage.removeItem("refreshToken");
             localStorage.removeItem("role");
             localStorage.removeItem("cart");
-            sessionStorage.removeItem("accessToken");
+            sessionStorage.removeItem("authToken");
             sessionStorage.removeItem("refreshToken");
             sessionStorage.removeItem("role");
             window.location.reload();

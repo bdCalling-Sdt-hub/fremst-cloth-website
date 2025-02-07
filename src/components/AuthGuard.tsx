@@ -2,6 +2,8 @@
 
 import { useEffect, useState } from "react";
 import { useRouter } from "next/navigation";
+import Image from "next/image";
+import logo from "../../src/assets/logo.png";
 
 export default function AuthGuard({ children }: { children: React.ReactNode }) {
   const router = useRouter();
@@ -22,7 +24,7 @@ export default function AuthGuard({ children }: { children: React.ReactNode }) {
   }, []);
 
   if (loading) {
-    return <p>Loading...</p>;
+    return <Image src={logo} alt="" />;
   }
 
   return isAuthenticated ? <>{children}</> : null;

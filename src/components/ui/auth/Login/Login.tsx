@@ -50,7 +50,7 @@ const Login = () => {
         <h1 className="text-[25px] font-semibold mb-2">
           Log in to your account
         </h1>
-        <p className="text-[#11D279]">
+        <p className="text-primary">
           {" "}
           Please enter your email and password to continue
         </p>
