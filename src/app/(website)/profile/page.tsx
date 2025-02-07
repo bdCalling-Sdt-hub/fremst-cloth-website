@@ -181,8 +181,8 @@ const ProfilePage = () => {
     },
     {
       title: "Price",
-      dataIndex: "totalAmount",
-      key: "totalAmount",
+      dataIndex: "budget",
+      key: "budget",
     },
     {
       title: "Status",
@@ -478,7 +478,7 @@ const ProfilePage = () => {
               <IoIosCalculator size={40} />
             </div>
             <h1 className="text-lg text-gray-600">Total Budget</h1>
-            <h1 className="text-2xl font-bold">{userDetails?.totalBudget}</h1>
+            <h1 className="text-2xl font-bold">{userDetails?.budget}</h1>
           </div>
           <div className="flex flex-col hover:shadow-xl px-10 rounded-2xl shadow-md py-6 gap-3 items-center">
             <div className="p-6 rounded-2xl bg-[#edf6fd]">
