@@ -27,7 +27,7 @@ import { IoIosCalculator } from "react-icons/io";
 import { RiMoneyCnyCircleLine } from "react-icons/ri";
 import { GiMoneyStack } from "react-icons/gi";
 import profileBanner from "../../../assets/profileBanner.png";
-
+import randomImage from "../../../assets/randomImage22.jpg";
 import Heading from "@/components/shared/Heading";
 import toast from "react-hot-toast";
 import { LuUpload } from "react-icons/lu";
@@ -241,7 +241,11 @@ const ProfilePage = () => {
             <div className="w-48 h-48 border-8 rounded-full border-white">
               <Image
                 className="object-cover w-full h-full rounded-full"
-                src={getImageUrl(userProfile?.profile)}
+                src={
+                  userProfile?.profile
+                    ? getImageUrl(userProfile?.profile)
+                    : randomImage
+                }
                 alt="profileImg"
                 width={200}
                 height={200}

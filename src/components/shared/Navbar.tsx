@@ -14,6 +14,7 @@ import { useGetUserProfileQuery } from "@/redux/apiSlices/authSlice";
 import { getImageUrl } from "@/utils/getImageUrl";
 import Currency from "@/utils/Currency";
 import logo from "../../assets/logo.png";
+import randomImage from "../../assets/randomImage22.jpg";
 
 const plusJakarta = Plus_Jakarta_Sans({
   subsets: ["latin"],
@@ -179,7 +180,11 @@ const Navbar = () => {
                     <div className="flex items-center cursor-pointer justify-center border-4 pe-4 p-1 rounded-full gap-2">
                       <div>
                         <Image
-                          src={getImageUrl(userProfile?.profile)}
+                          src={
+                            userProfile?.profile
+                              ? getImageUrl(userProfile?.profile)
+                              : randomImage
+                          }
                           alt=""
                           height={44}
                           width={44}

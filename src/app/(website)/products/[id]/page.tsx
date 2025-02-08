@@ -15,12 +15,25 @@ import { FaCheckCircle } from "react-icons/fa";
 import { getImageUrl } from "@/utils/getImageUrl";
 import Currency from "@/utils/Currency";
 
+interface CartItem {
+  product: {
+    id: any;
+    name: any;
+    image: any;
+    price: any;
+    salePrice: any;
+  };
+  quantity: number;
+  color: string;
+  size: string;
+}
+
 const ProductDetailsPage: React.FC = () => {
   const [mainImage, setMainImage] = useState("");
   const [selectedSize, setSelectedSize] = useState("");
   const [quantity, setQuantity] = useState<number>(1);
   const [selectedColors, setSelectedColors] = useState("");
-  const [localCart, setLocalCart] = useState([]);
+  const [cartItems, setCartItems] = useState<CartItem[]>([]);
 
   // console.log(mainImage);
 
@@ -37,7 +50,7 @@ const ProductDetailsPage: React.FC = () => {
   useEffect(() => {
     const localCart = localStorage.getItem("cart");
     if (localCart) {
-      setLocalCart(JSON.parse(localCart));
+      setCartItems(JSON.parse(localCart));
     }
   }, []);
 
@@ -71,7 +84,7 @@ const ProductDetailsPage: React.FC = () => {
   ];
 
   const handleAddToCart = async () => {
-    const data = {
+    const data: CartItem = {
       product: {
         id: singleProduct?._id,
         name: singleProduct?.name,
@@ -83,11 +96,12 @@ const ProductDetailsPage: React.FC = () => {
       color: selectedColors,
       size: selectedSize,
     };
-    if (localCart) {
-      localStorage.setItem("cart", JSON.stringify([...localCart, data]));
-    } else {
-      localStorage.setItem("cart", JSON.stringify([data]));
-    }
+
+    const updatedCart = cartItems ? [...cartItems, data] : [data];
+    localStorage.setItem("cart", JSON.stringify(updatedCart));
+
+    setCartItems(updatedCart); // Update state to trigger a smooth UI update
+
     toast.success("Product added to cart successfully!");
   };
 
@@ -98,11 +112,12 @@ const ProductDetailsPage: React.FC = () => {
           <div className="md:w-[45%] flex flex-col items-center">
             <div className="w-full mb-5">
               <Image
-                className="md:w-[600px] w-[350px] object-cover h-[300px] md:h-[440px]"
+                className="md:w-[600px] w-[350px] object-contain h-[300px] md:h-[440px]"
                 src={getImageUrl(mainImage)}
                 alt="Main Image"
-                width={100}
-                height={100}
+                width={152400}
+                height={56300}
+                unoptimized
               />
             </div>
             <div className="grid grid-cols-4 gap-2">
@@ -115,8 +130,8 @@ const ProductDetailsPage: React.FC = () => {
                     alt={`Thumbnail ${index + 1}`}
                     className="cursor-pointer object-cover md:h-28 md:w-28 h-20 w-20 border border-gray-300 rounded-lg transition-transform transform hover:scale-110"
                     onClick={() => setMainImage(img)}
-                    width={100}
-                    height={100}
+                    width={684600}
+                    height={63400}
                   />
                 ))}
             </div>
@@ -231,11 +246,13 @@ const ProductDetailsPage: React.FC = () => {
               >
                 Add to Cart
               </button>
-              <Link href="/checkout">
-                <button className="bg-primary text-white px-5 py-3 rounded-lg">
-                  Buy Now
-                </button>
-              </Link>
+              {cartItems.length > 0 && (
+                <Link href="/checkout">
+                  <button className="bg-primary text-white px-5 py-3 rounded-lg">
+                    Buy Now
+                  </button>
+                </Link>
+              )}
             </div>
 
             <div className="py-3">
