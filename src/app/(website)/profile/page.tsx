@@ -56,7 +56,7 @@ const ProfilePage = () => {
   if (isLoading || orderLoading) {
     return (
       <div className="flex min-h-screen items-center justify-center">
-        <Image src={logo} alt="" />
+        <Image className="w-24" src={logo} alt="" />
       </div>
     );
   }

@@ -117,7 +117,7 @@ const TopProduct = () => {
       {
         breakpoint: 480,
         settings: {
-          slidesToShow: 2,
+          slidesToShow: 1,
           slidesToScroll: 1,
         },
       },
@@ -147,7 +147,7 @@ const TopProduct = () => {
         <div className="w-full ">
           <div className=" lg:w-[1300px] md:w-[600px]">
             <Slider {...settings}>
-              {productsData?.map((product: any) => (
+              {productsData?.slice(0, 8)?.map((product: any) => (
                 <div key={product?._id} className=" ms-5">
                   <ProductCard product={product} />
                 </div>

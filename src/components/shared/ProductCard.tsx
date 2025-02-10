@@ -18,7 +18,7 @@ const bigShoulders = Big_Shoulders_Display({
 const ProductCard = ({ product }: { product: any }) => {
   // console.log("savsv", product);
   return (
-    <div className="relative border-2 rounded-2xl md:w-[290px] group bg-white bg-opacity-30  hover:border-primary ">
+    <div className="relative border-2 rounded-2xl md:w-[290px] w-[90%] group bg-white bg-opacity-30  hover:border-primary ">
       <div className="relative">
         {product.availability === false && (
           <div className="absolute top-0 left-0 z-10">
@@ -34,7 +34,7 @@ const ProductCard = ({ product }: { product: any }) => {
         <Image
           src={getImageUrl(product.image)}
           alt={product.name}
-          className=" h-[250px] w-[250px] object-fill p-4"
+          className=" h-[250px] w-full object-contain p-4"
           width={250}
           height={250}
         />

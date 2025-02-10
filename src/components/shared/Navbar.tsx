@@ -54,7 +54,7 @@ const Navbar = () => {
   if (isLoading) {
     return (
       <div className="flex min-h-screen items-center justify-center">
-        <Image src={logo} alt="" />
+        <Image className="w-24" src={logo} alt="" />
       </div>
     );
   }
