@@ -21,12 +21,12 @@ const Login = () => {
       const res = await login(values).unwrap();
       if (res?.success) {
         if (remember) {
-          localStorage.setItem("authToken", res?.data?.accessToken);
+          localStorage.setItem("authenticationToken", res?.data?.accessToken);
           localStorage.setItem("refreshToken", res?.data?.refreshToken);
           localStorage.setItem("role", res?.data?.role);
           Cookies.set("refreshToken", res?.data?.refreshToken);
         } else {
-          sessionStorage.setItem("authToken", res?.data?.accessToken);
+          sessionStorage.setItem("authenticationToken", res?.data?.accessToken);
           sessionStorage.setItem("refreshToken", res?.data?.refreshToken);
           sessionStorage.setItem("role", res?.data?.role);
           Cookies.set("refreshToken", res?.data?.refreshToken);

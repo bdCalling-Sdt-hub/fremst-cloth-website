@@ -99,11 +99,11 @@ const Navbar = () => {
         <Link
           href={"/login"}
           onClick={() => {
-            localStorage.removeItem("authToken");
+            localStorage.removeItem("authenticationToken");
             localStorage.removeItem("refreshToken");
             localStorage.removeItem("role");
             localStorage.removeItem("cart");
-            sessionStorage.removeItem("authToken");
+            sessionStorage.removeItem("authenticationToken");
             sessionStorage.removeItem("refreshToken");
             sessionStorage.removeItem("role");
             window.location.reload();

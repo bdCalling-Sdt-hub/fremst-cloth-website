@@ -11,10 +11,11 @@ export default function AuthGuard({ children }: { children: React.ReactNode }) {
   const [loading, setLoading] = useState(true);
 
   useEffect(() => {
-    const authToken =
-      localStorage.getItem("authToken") || sessionStorage.getItem("authToken");
+    const authenticationToken =
+      localStorage.getItem("authenticationToken") ||
+      sessionStorage.getItem("authenticationToken");
 
-    if (!authToken) {
+    if (!authenticationToken) {
       router.push("/login");
     } else {
       setIsAuthenticated(true);

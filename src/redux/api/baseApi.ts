@@ -8,8 +8,8 @@ const api = createApi({
     // baseUrl: 'https://tamim.binarybards.online/api/v1',
     prepareHeaders: (headers) => {
       const token =
-        localStorage.getItem("authToken") ||
-        sessionStorage.getItem("authToken");
+        localStorage.getItem("authenticationToken") ||
+        sessionStorage.getItem("authenticationToken");
 
       if (token) {
         headers.set("authorization", `Bearer ${token}`);
