@@ -18,7 +18,7 @@ const bigShoulders = Big_Shoulders_Display({
 const ProductCard = ({ product }: { product: any }) => {
   // console.log("savsv", product);
   return (
-    <div className="relative border-2 rounded-2xl md:w-[290px] w-[90%] group bg-white bg-opacity-30  hover:border-primary ">
+    <div className="relative border-2 rounded-2xl md:w-[290px] w-[90%] group bg-white bg-opacity-30  hover:border-primary flex flex-col justify-between">
       <div className="relative">
         {product.availability === false && (
           <div className="absolute top-0 left-0 z-10">
@@ -40,7 +40,7 @@ const ProductCard = ({ product }: { product: any }) => {
         />
       </div>
 
-      <div className="space-y-1 px-[16px] pb-[21px]">
+      <div className="space-y-1 px-[16px] flex-grow">
         <p
           className={`text-[#797572] text-[12px] font-medium tracking-wide ${plusJakarta.className}`}
         >
@@ -51,12 +51,24 @@ const ProductCard = ({ product }: { product: any }) => {
         >
           {product.name}
         </h1>
-        <p
-          className={`${bigShoulders.className} 
-          text-2xl tracking-wide font-normal mb-4 `}
-        >
-          {product.salePrice} <Currency />
-        </p>
+        <div className="pb-5 relative flex gap-3 text-primary">
+          {product?.salePrice ? (
+            <div>
+              <p className="line-through text-gray-500">
+                {product?.price} <Currency />
+              </p>
+              <p className="absolute font-bold top-4 left-0 text-2xl ">
+                {product?.salePrice} <Currency />
+              </p>
+            </div>
+          ) : (
+            <p className="absolute font-bold top-4 left-0 text-2xl ">
+              {product?.price} <Currency />
+            </p>
+          )}
+        </div>
+      </div>
+      <div className="p-2">
         <Link href={`/products/${product?._id}`}>
           <button
             className=" border-2 mt-2 border-primary text-primary w-full h-[47px]  rounded-xl font-semibold  text-[20px] tracking-wide

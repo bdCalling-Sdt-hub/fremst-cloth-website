@@ -84,6 +84,13 @@ const ProductDetailsPage: React.FC = () => {
   ];
 
   const handleAddToCart = async () => {
+    if (selectedSize === "") {
+      return toast.error("Please select a size");
+    }
+    if (selectedColors === "") {
+      return toast.error("Please select a color");
+    }
+
     const data: CartItem = {
       product: {
         id: singleProduct?._id,
