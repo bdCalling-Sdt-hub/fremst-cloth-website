@@ -19,7 +19,7 @@ const bigShoulders = Big_Shoulders_Display({
 
 const ShopPage = () => {
   const [checkedCategories, setCheckedCategories] = useState<string[]>([]);
-  const [priceRange, setPriceRange] = useState<[number, number]>([0, 3000000]);
+  const [priceRange, setPriceRange] = useState<[number, number]>([0, 30000]);
   const [debouncedPriceRange, setDebouncedPriceRange] = useState(priceRange);
 
   useEffect(() => {
@@ -89,7 +89,7 @@ const ShopPage = () => {
           >
             <Slider
               range
-              max={3000000}
+              max={30000}
               min={0}
               value={priceRange} // Controlled component
               onChange={handlePriceChange}
