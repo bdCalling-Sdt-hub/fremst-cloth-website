@@ -55,7 +55,7 @@ const ProductCard = ({ product }: { product: any }) => {
           className={`${bigShoulders.className} 
           text-2xl tracking-wide font-normal mb-4 `}
         >
-          {product.price} <Currency />
+          {product.salePrice} <Currency />
         </p>
         <Link href={`/products/${product?._id}`}>
           <button
