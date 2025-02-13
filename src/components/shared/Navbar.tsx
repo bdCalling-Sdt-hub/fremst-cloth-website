@@ -60,8 +60,10 @@ const Navbar = () => {
   }
 
   const userProfile = userProfileData?.data?.user || [];
+  const adminProfile = userProfileData?.data || [];
   const { budget, budgetLeft } = userProfileData?.data || {};
-  // console.log(userProfile);
+  const role = userProfileData?.data?.role || [];
+  console.log(role);
 
   const tooltipContent = (
     <div className="flex items-center justify-between">
@@ -89,32 +91,56 @@ const Navbar = () => {
     { key: "contact-us", label: "Contact Us", path: "/contact" },
   ];
 
-  const items2: MenuProps["items"] = [
-    {
-      label: <Link href={"/profile"}> Profile </Link>,
-      key: "0",
-    },
-    {
-      label: (
-        <Link
-          href={"/login"}
-          onClick={() => {
-            localStorage.removeItem("authenticationToken");
-            localStorage.removeItem("refreshToken");
-            localStorage.removeItem("role");
-            localStorage.removeItem("cart");
-            sessionStorage.removeItem("authenticationToken");
-            sessionStorage.removeItem("refreshToken");
-            sessionStorage.removeItem("role");
-            window.location.reload();
-          }}
-        >
-          Logout
-        </Link>
-      ),
-      key: "1",
-    },
-  ];
+  const items2: MenuProps["items"] =
+    role !== "admin" && role !== "super-admin"
+      ? [
+          {
+            label: <Link href={"/profile"}> Profile </Link>,
+            key: "0",
+          },
+          {
+            label: (
+              <Link
+                href={"/login"}
+                onClick={() => {
+                  localStorage.removeItem("authenticationToken");
+                  localStorage.removeItem("refreshToken");
+                  localStorage.removeItem("role");
+                  localStorage.removeItem("cart");
+                  sessionStorage.removeItem("authenticationToken");
+                  sessionStorage.removeItem("refreshToken");
+                  sessionStorage.removeItem("role");
+                  window.location.reload();
+                }}
+              >
+                Logout
+              </Link>
+            ),
+            key: "1",
+          },
+        ]
+      : [
+          {
+            label: (
+              <Link
+                href={"/login"}
+                onClick={() => {
+                  localStorage.removeItem("authenticationToken");
+                  localStorage.removeItem("refreshToken");
+                  localStorage.removeItem("role");
+                  localStorage.removeItem("cart");
+                  sessionStorage.removeItem("authenticationToken");
+                  sessionStorage.removeItem("refreshToken");
+                  sessionStorage.removeItem("role");
+                  window.location.reload();
+                }}
+              >
+                Logout
+              </Link>
+            ),
+            key: "0",
+          },
+        ];
 
   return (
     <div className={`${plusJakarta.className}`}>
@@ -150,7 +176,7 @@ const Navbar = () => {
               <NavItems items={items} />
             </div>
 
-            {userProfile?.role ? (
+            {userProfile?.role || role ? (
               <div className="flex items-center space-x-4">
                 <div className="hidden md:block">
                   <Badge count={count ? (count === 0 ? "" : count) : ""}>
@@ -183,6 +209,8 @@ const Navbar = () => {
                           src={
                             userProfile?.profile
                               ? getImageUrl(userProfile?.profile)
+                              : adminProfile?.profile
+                              ? getImageUrl(adminProfile?.profile)
                               : randomImage
                           }
                           alt=""
@@ -191,7 +219,9 @@ const Navbar = () => {
                           className="w-12 h-12 rounded-full object-cover"
                         />
                       </div>
-                      <p className="text-sm md:text-xl">{userProfile?.name}</p>
+                      <p className="text-sm md:text-xl">
+                        {userProfile?.name || adminProfile?.name}
+                      </p>
                     </div>
                   </a>
                 </Dropdown>
