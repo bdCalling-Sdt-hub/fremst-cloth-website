@@ -64,7 +64,7 @@ const ProfilePage = () => {
   const userDetails = userProfileData?.data || [];
   const userProfile = userProfileData?.data?.user || [];
   const orders = orderData?.data?.data || [];
-  console.log(userDetails);
+  console.log(orders);
 
   const showModal = () => {
     if (!userProfile) {
@@ -181,8 +181,13 @@ const ProfilePage = () => {
     },
     {
       title: "Price",
-      dataIndex: "budget",
-      key: "budget",
+      dataIndex: "totalAmount",
+      key: "totalAmount",
+      render: (text: string) => (
+        <span>
+          {text} <Currency />
+        </span>
+      ),
     },
     {
       title: "Status",
@@ -191,11 +196,15 @@ const ProfilePage = () => {
       render: (text: string) => (
         <span
           className={
-            text === "completed"
-              ? "text-green-500"
+            text === "pending"
+              ? "bg-yellow-500 py-1 px-2 text-white rounded-3xl"
+              : text === "cancelled"
+              ? "bg-red-500 py-1 px-2 text-white rounded-3xl"
+              : text === "completed"
+              ? "bg-green-500 py-1 px-2 text-white rounded-3xl"
               : text === "dispatched"
-              ? "text-blue-500"
-              : "text-red-500"
+              ? "bg-blue-500 py-1 px-2 text-white rounded-3xl"
+              : ""
           }
         >
           {text}

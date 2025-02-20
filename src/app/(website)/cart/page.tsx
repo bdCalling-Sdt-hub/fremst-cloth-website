@@ -10,6 +10,7 @@ import { getImageUrl } from "@/utils/getImageUrl";
 import toast from "react-hot-toast";
 import { useRouter } from "next/navigation";
 import Currency from "@/utils/Currency";
+import { FaTrash } from "react-icons/fa";
 
 interface CartItem {
   key: string;
@@ -51,9 +52,11 @@ const CartPage = () => {
   };
 
   // Remove item and sync with localStorage
-  const removeItem = (key: string) => {
+  const removeItem = (productId: string) => {
     setCart((prevCart) => {
-      const updatedCart = prevCart.filter((item) => item.key !== key);
+      const updatedCart = prevCart.filter(
+        (item) => item.product.id !== productId
+      );
       localStorage.setItem("cart", JSON.stringify(updatedCart)); // Sync changes
       return updatedCart;
     });
@@ -93,6 +96,11 @@ const CartPage = () => {
           {record.product.salePrice || record.product.price} <Currency />
         </p>
       ),
+    },
+    {
+      title: "Size",
+      dataIndex: "size",
+      key: "size",
     },
     {
       title: "Quantity",
@@ -139,9 +147,9 @@ const CartPage = () => {
       render: (_: any, record: any) => (
         <button
           className="text-red-500 hover:underline"
-          onClick={() => removeItem(record.key)}
+          onClick={() => removeItem(record.product.id)}
         >
-          X
+          <FaTrash size={18} />
         </button>
       ),
     },

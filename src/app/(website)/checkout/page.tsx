@@ -98,6 +98,7 @@ const CheckoutPage = () => {
         toast.success(res?.message);
         setIsModalVisible(true);
         localStorage.removeItem("cart");
+        window.dispatchEvent(new Event("storage"));
       }
     } catch (error: any) {
       toast.error(

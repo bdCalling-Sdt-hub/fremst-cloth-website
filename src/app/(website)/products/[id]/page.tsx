@@ -3,7 +3,6 @@
 import { useEffect, useState } from "react";
 import { ConfigProvider, Tabs } from "antd";
 
-import Link from "next/link";
 import toast from "react-hot-toast";
 import Image from "next/image";
 import { FiCheckSquare } from "react-icons/fi";
@@ -11,7 +10,7 @@ import Heading from "@/components/shared/Heading";
 import YouMayLikeSection from "@/components/ui/website/product/YouMayLikeSection";
 import { useParams } from "next/navigation";
 import { useGetSingleProductQuery } from "@/redux/apiSlices/productSlice";
-import { FaCheckCircle } from "react-icons/fa";
+
 import { getImageUrl } from "@/utils/getImageUrl";
 import Currency from "@/utils/Currency";
 
@@ -24,7 +23,7 @@ interface CartItem {
     salePrice: any;
   };
   quantity: number;
-  color: string;
+  // color: string;
   size: string;
 }
 
@@ -32,7 +31,7 @@ const ProductDetailsPage: React.FC = () => {
   const [mainImage, setMainImage] = useState("");
   const [selectedSize, setSelectedSize] = useState("");
   const [quantity, setQuantity] = useState<number>(1);
-  const [selectedColors, setSelectedColors] = useState("");
+  // const [selectedColors, setSelectedColors] = useState("");
   const [cartItems, setCartItems] = useState<CartItem[]>([]);
 
   // console.log(mainImage);
@@ -63,7 +62,7 @@ const ProductDetailsPage: React.FC = () => {
   }
 
   const singleProduct = product?.data;
-  // console.log(singleProduct);
+  console.log(singleProduct);
 
   const totalPrice =
     (singleProduct?.salePrice
@@ -87,9 +86,9 @@ const ProductDetailsPage: React.FC = () => {
     if (selectedSize === "") {
       return toast.error("Please select a size");
     }
-    if (selectedColors === "") {
-      return toast.error("Please select a color");
-    }
+    // if (selectedColors === "") {
+    //   return toast.error("Please select a color");
+    // }
 
     const data: CartItem = {
       product: {
@@ -100,12 +99,14 @@ const ProductDetailsPage: React.FC = () => {
         salePrice: singleProduct?.salePrice,
       },
       quantity: quantity,
-      color: selectedColors,
+      // color: selectedColors,
       size: selectedSize,
     };
 
     const updatedCart = cartItems ? [...cartItems, data] : [data];
     localStorage.setItem("cart", JSON.stringify(updatedCart));
+
+    window.dispatchEvent(new Event("storage"));
 
     setCartItems(updatedCart); // Update state to trigger a smooth UI update
 
@@ -193,9 +194,9 @@ const ProductDetailsPage: React.FC = () => {
                 </div>
               </div>
             </div>
-            <div className="flex gap-3 mt-5 md:mt-0 items-center">
-              <h1 className="font-bold text-2xl me-3">Color:</h1>
-              <div className="flex gap-2">
+            {/* <div className="flex gap-3 mt-5 md:mt-0 items-center"> */}
+            {/* <h1 className="font-bold text-2xl me-3">Color:</h1> */}
+            {/* <div className="flex gap-2">
                 {singleProduct?.colors?.map((color: string) => (
                   <label key={color} className="cursor-pointer relative">
                     <input
@@ -222,8 +223,8 @@ const ProductDetailsPage: React.FC = () => {
                     </div>
                   </label>
                 ))}
-              </div>
-            </div>
+              </div> */}
+            {/* </div> */}
             <div className="flex items-center gap-4 ">
               <div className="flex border font-semibold p-2 rounded-2xl border-gray-300 items-center gap-3">
                 <button
@@ -253,13 +254,13 @@ const ProductDetailsPage: React.FC = () => {
               >
                 Add to Cart
               </button>
-              {cartItems.length > 0 && (
+              {/* {cartItems.length > 0 && (
                 <Link href="/checkout">
                   <button className="bg-primary text-white px-5 py-3 rounded-lg">
                     Buy Now
                   </button>
                 </Link>
-              )}
+              )} */}
             </div>
 
             <div className="py-3">
