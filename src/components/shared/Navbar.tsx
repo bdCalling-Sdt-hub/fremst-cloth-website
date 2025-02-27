@@ -15,6 +15,7 @@ import { getImageUrl } from "@/utils/getImageUrl";
 import Currency from "@/utils/Currency";
 import logo from "../../assets/logo.png";
 import randomImage from "../../assets/randomImage22.jpg";
+import { FaShoppingCart } from "react-icons/fa";
 
 const plusJakarta = Plus_Jakarta_Sans({
   subsets: ["latin"],
@@ -25,23 +26,24 @@ const Navbar = () => {
   const [showDrawer, setShowDrawer] = useState(false);
   const [count, setCount] = useState(0);
   const [tooltipWidth, setTooltipWidth] = useState("290px");
+  const [cartItems, setCartItems] = useState<any[]>([]);
 
   const { data: userProfileData, isLoading } =
     useGetUserProfileQuery(undefined);
 
   useEffect(() => {
-    const updateCartCount = () => {
+    const updateCartItems = () => {
       const cartData = localStorage.getItem("cart");
-      setCount(cartData ? JSON.parse(cartData).length : 0);
+      const items = cartData ? JSON.parse(cartData) : [];
+      setCartItems(items);
+      setCount(items.length); // Update count based on items length
     };
 
-    updateCartCount();
-    window.addEventListener("storage", updateCartCount); // **Fix: Syncs across tabs**
+    updateCartItems(); // Call it initially
+    window.addEventListener("storage", updateCartItems); // Sync across tabs
 
-    return () => window.removeEventListener("storage", updateCartCount);
+    return () => window.removeEventListener("storage", updateCartItems);
   }, []);
-
-  console.log(count);
 
   useEffect(() => {
     const updateTooltipWidth = () => {
@@ -208,30 +210,40 @@ const Navbar = () => {
                   </div>
                 </Tooltip>
 
-                <Dropdown menu={{ items: items2 }}>
-                  <a onClick={(e) => e.preventDefault()}>
-                    <div className="flex items-center cursor-pointer justify-center border-4 pe-4 p-1 rounded-full gap-2">
-                      <div>
-                        <Image
-                          src={
-                            userProfile?.profile
-                              ? getImageUrl(userProfile?.profile)
-                              : adminProfile?.profile
-                              ? getImageUrl(adminProfile?.profile)
-                              : randomImage
-                          }
-                          alt=""
-                          height={44}
-                          width={44}
-                          className="w-12 h-12 rounded-full object-cover"
-                        />
+                <div className="md:block hidden">
+                  <Dropdown menu={{ items: items2 }}>
+                    <a onClick={(e) => e.preventDefault()}>
+                      <div className="flex items-center cursor-pointer justify-center border-4 pe-4 p-1 rounded-full gap-2">
+                        <div>
+                          <Image
+                            src={
+                              userProfile?.profile
+                                ? getImageUrl(userProfile?.profile)
+                                : adminProfile?.profile
+                                ? getImageUrl(adminProfile?.profile)
+                                : randomImage
+                            }
+                            alt=""
+                            height={44}
+                            width={44}
+                            className="w-12 h-12 rounded-full object-cover"
+                          />
+                        </div>
+                        <p className="text-sm md:text-xl">
+                          {userProfile?.name || adminProfile?.name}
+                        </p>
                       </div>
-                      <p className="text-sm md:text-xl">
-                        {userProfile?.name || adminProfile?.name}
-                      </p>
+                    </a>
+                  </Dropdown>
+                </div>
+                <div className="md:hidden block">
+                  <Link href="/cart">
+                    <div className="flex items-center cursor-pointer justify-center  gap-2">
+                      <FaShoppingCart size={30} />
+                      <p className="text-sm">{cartItems?.length || 0}</p>
                     </div>
-                  </a>
-                </Dropdown>
+                  </Link>
+                </div>
               </div>
             ) : (
               <Link href="/login">
@@ -244,7 +256,15 @@ const Navbar = () => {
         </nav>
 
         {/* Mobile Drawer */}
-        <MobileDrawer open={showDrawer} setOpen={setShowDrawer} items={items} />
+        <MobileDrawer
+          open={showDrawer}
+          setOpen={setShowDrawer}
+          items={items}
+          userProfile={userProfile}
+          adminProfile={adminProfile}
+          cartItems={cartItems}
+          count={count}
+        />
       </header>
     </div>
   );
