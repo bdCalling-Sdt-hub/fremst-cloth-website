@@ -1,13 +1,13 @@
 /* eslint-disable @typescript-eslint/no-explicit-any */
 import { Dispatch, SetStateAction } from "react";
 import randomImage from "../../assets/randomImage22.jpg";
-import { ConfigProvider, Drawer, Select } from "antd";
+import { Drawer } from "antd";
 import Link from "next/link";
 import { Heart } from "lucide-react";
-import { TbChevronDown, TbWorld } from "react-icons/tb";
 import NavItems from "./NavItems";
 import Image from "next/image";
 import { getImageUrl } from "@/utils/getImageUrl";
+import { useRouter } from "next/navigation";
 const MobileDrawer = ({
   open,
   setOpen,
@@ -23,22 +23,24 @@ const MobileDrawer = ({
   cartItems: any[];
   count: number;
 }) => {
+  const router = useRouter();
+
   const onClose = () => {
     setOpen(!open);
   };
 
-  const languageOptions = [
-    { value: "en", label: "English", shortLabel: "EN" },
-    { value: "bn", label: "Bengali", shortLabel: "BN" },
-    { value: "hi", label: "Hindi", shortLabel: "HI" },
-    { value: "es", label: "Spanish", shortLabel: "ES" },
-  ];
+  // const languageOptions = [
+  //   { value: "en", label: "English", shortLabel: "EN" },
+  //   { value: "bn", label: "Bengali", shortLabel: "BN" },
+  //   { value: "hi", label: "Hindi", shortLabel: "HI" },
+  //   { value: "es", label: "Spanish", shortLabel: "ES" },
+  // ];
 
-  const customLabel = (option: any) => (
-    <div className="flex items-center gap-2">
-      <span>{option.label}</span>
-    </div>
-  );
+  // const customLabel = (option: any) => (
+  //   <div className="flex items-center gap-2">
+  //     <span>{option.label}</span>
+  //   </div>
+  // );
 
   return (
     <Drawer placement="right" onClose={onClose} open={open}>
@@ -70,7 +72,7 @@ const MobileDrawer = ({
             </p>
           </div>
         </div>
-        <ConfigProvider
+        {/* <ConfigProvider
           theme={{
             components: {
               Select: {
@@ -100,7 +102,24 @@ const MobileDrawer = ({
             onChange={(value) => console.log(value)}
             optionRender={customLabel}
           />
-        </ConfigProvider>
+        </ConfigProvider> */}
+        <div className="flex justify-end">
+          <button
+            className="px-10 py-3 border w-full rounded-lg bg-primary text-white text-lg"
+            onClick={() => {
+              sessionStorage.removeItem("authenticationToken");
+              sessionStorage.removeItem("refreshToken");
+              sessionStorage.removeItem("role");
+              localStorage.removeItem("authenticationToken");
+              localStorage.removeItem("refreshToken");
+              localStorage.removeItem("role");
+              localStorage.removeItem("cart");
+              router.replace("/login");
+            }}
+          >
+            Logout
+          </button>
+        </div>
       </div>
     </Drawer>
   );

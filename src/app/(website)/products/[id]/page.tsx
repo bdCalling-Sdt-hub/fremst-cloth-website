@@ -174,7 +174,7 @@ const ProductDetailsPage: React.FC = () => {
                 <span className="text-red-500">Out Of Stock</span>
               )}
             </h1>
-            <div className="flex items-center gap-10 mt-10 md:mt-0">
+            <div className="flex items-center gap-10 my-10 md:my-0">
               <h1 className="font-bold text-2xl">Size:</h1>
               <div>
                 <div className="flex flex-wrap gap-2">
@@ -225,7 +225,7 @@ const ProductDetailsPage: React.FC = () => {
                 ))}
               </div> */}
             {/* </div> */}
-            <div className="flex items-center gap-4 ">
+            <div className="flex items-center gap-4 my-5 md:my-0">
               <div className="flex border font-semibold p-2 rounded-2xl border-gray-300 items-center gap-3">
                 <button
                   onClick={() =>
