@@ -65,7 +65,7 @@ const CheckoutPage = () => {
   }
 
   const userDetails = userData?.data?.user;
-  const { address } = userDetails;
+  const { address, name } = userDetails;
 
   const totalPrice = cart?.reduce(
     (total: number, item: any) =>
@@ -130,6 +130,7 @@ const CheckoutPage = () => {
           className="w-full md:flex gap-5"
           onFinish={onFinish}
           initialValues={{
+            name: name,
             address: {
               streetAddress: address?.streetAddress,
               city: address?.city,
