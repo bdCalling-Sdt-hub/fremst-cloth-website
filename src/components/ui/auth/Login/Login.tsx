@@ -16,9 +16,14 @@ const Login = () => {
   const [login] = useLoginMutation();
 
   const onFinish = async (values: { email: string; password: string }) => {
-    console.log(values);
+    const { email, password } = values;
+    const trimmedValues = {
+      email: email.trim(),
+      password: password.trim(),
+    };
+
     try {
-      const res = await login(values).unwrap();
+      const res = await login(trimmedValues).unwrap();
       if (res?.success) {
         if (remember) {
           localStorage.setItem("authenticationToken", res?.data?.accessToken);
