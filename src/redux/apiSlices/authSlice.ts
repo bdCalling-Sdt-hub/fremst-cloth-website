@@ -10,6 +10,33 @@ const authApi = api.injectEndpoints({
       }),
     }),
 
+    forgerPassword: builder.mutation({
+      query: (data) => ({
+        url: "/auth/forgot-password",
+        method: "POST",
+        body: data,
+      }),
+    }),
+
+    verifyOtp: builder.mutation({
+      query: (data) => ({
+        url: "/auth/verify-email",
+        method: "POST",
+        body: data,
+      }),
+    }),
+
+    resetPassword: builder.mutation({
+      query: (data) => ({
+        url: "/auth/reset-password",
+        method: "POST",
+        body: data,
+        headers: {
+          Authorization: localStorage.getItem("oneTimeToken") || undefined,
+        },
+      }),
+    }),
+
     getUserProfile: builder.query({
       query: () => ({
         url: "user/profile",
@@ -32,4 +59,7 @@ export const {
   useLoginMutation,
   useGetUserProfileQuery,
   useUpdateUserProfileMutation,
+  useForgerPasswordMutation,
+  useVerifyOtpMutation,
+  useResetPasswordMutation,
 } = authApi;

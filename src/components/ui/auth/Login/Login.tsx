@@ -25,6 +25,13 @@ const Login = () => {
     try {
       const res = await login(trimmedValues).unwrap();
       if (res?.success) {
+        if (res?.data?.role === "company") {
+          toast.error(
+            "You cannot login as a company. Please login as an employee."
+          );
+          return;
+        }
+
         if (remember) {
           localStorage.setItem("authenticationToken", res?.data?.accessToken);
           localStorage.setItem("refreshToken", res?.data?.refreshToken);

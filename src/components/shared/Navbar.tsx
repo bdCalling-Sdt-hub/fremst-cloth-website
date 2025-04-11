@@ -71,8 +71,8 @@ const Navbar = () => {
   const userProfile = userProfileData?.data?.user || [];
   const adminProfile = userProfileData?.data || [];
   const { budget, budgetLeft } = userProfileData?.data || {};
-  const role = userProfileData?.data?.role || [];
-  console.log(role);
+  const role = userProfileData?.data?.user?.role || [];
+  console.log(adminProfile);
 
   const tooltipContent = (
     <div className="flex items-center justify-between">
@@ -101,7 +101,7 @@ const Navbar = () => {
   ];
 
   const items2: MenuProps["items"] =
-    role !== "admin" && role !== "super-admin"
+    role !== "admin" && role !== "super-admin" && role !== "company"
       ? [
           {
             label: <Link href={"/profile"}> Profile </Link>,
